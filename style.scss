@@ -24,8 +24,6 @@ body {
 }
 
 .container {
-  margin: 0 auto;
-  max-width: 740px;
   padding: 0 10px;
   width: 100%;
 }
@@ -241,6 +239,11 @@ nav {
 // .main
 //
 
+#main.container {
+  margin: 0 auto;
+  max-width: 740px;
+}
+
 .posts > .post {
   padding-bottom: 2em;
   border-bottom: 1px solid $lightGray;
@@ -257,7 +260,6 @@ nav {
     border-left: 2px solid $gray;
     padding: 0.1em 1em;
     color: $gray;
-    font-size: 22px;
     font-style: italic;
   }
 
