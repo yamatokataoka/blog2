@@ -16,10 +16,12 @@ This is what the website we make will look like:
 
 # 1 Create a Jekyll blog
 reference: [https://davemateer.com/2018/01/25/Jekyll-and-Docker](https://davemateer.com/2018/01/25/Jekyll-and-Docker)
+
 ## 1 Learn Jekyll and Theme
 [Jekyll](https://jekyllrb.com) is a website generator that’s designed for building minimal, static blogs to be hosted on GitHub Pages.
 
 There are multiple ways to get started with Jekyll, each with its own variations. Here are a few options:
+
 * Install Jekyll locally via the command line, create a new plane website using `jekyll new`, build it locally with `jekyll build`, and then serve it.
 
 * Clone a repository as a starting point to your local machine, install Jekyll locally via the command line, make updates to your website, build it locally, and then serve it. (in this guide, Jekyll will be installed on docker)
@@ -45,6 +47,7 @@ We’ll start by cloning the repository, Jekyll Now, that has followed best prac
 Open terminal on mac.
 
 Run below command in wherever you want.
+
 ```
 % git clone git@github.com:barryclark/jekyll-now.git
 ```
@@ -76,11 +79,13 @@ drwxr-xr-x  8 yamatokataoka  staff   256 Dec 24 20:34 images
 ```
 
 To create a local repository with a clean commit history, remove .git folder.
+
 ```
 % rm -rf .git
 ```
 
 > rm - command to delete one or more files or directories  
+>  
 > -rf - r means recursive removal, it is useful for deleting directory and f which a removal will continue without prompting you
 
 now jekyll-now setting up has finished.
@@ -98,6 +103,7 @@ Follow [Install Docker Desktop on mac](https://docs.docker.com/docker-for-mac/in
 Jekyll provides their own docker image pre-installed Jekyll.
 
 run the Jekyll image on Docker from a new jekyll-now directory
+
 ```
 % docker run --rm -it --volume="$PWD:/srv/jekyll" --volume="$PWD/vendor/bundle:/usr/local/bundle" jekyll/jekyll /bin/bash
 ```
@@ -143,6 +149,7 @@ yamatokataoka@Yamatos-MacBook-Pro jekyll-now %
 run to serve a site locally using port 4000
 
 A Jekyll blog is being generated and served from the Docker container and you can point your browser to localhost:4000 and see the Docker served site.
+
 ```
 docker run --rm -it -p 4000:4000 --volume="$PWD:/srv/jekyll" --volume="$PWD/vendor/bundle:/usr/local/bundle" jekyll/jekyll /bin/bash jekyll serve --force_polling
 ```
@@ -159,6 +166,7 @@ see your site by going to localhost:4000 in your browser
 # 3 Publish a blog on GitHub Pages
 ## 1 Create new GitHub repository
 First create a remote repository on GitHub.
+
 In the upper-right corner of any page, use the drop-down menu, and select New repository.
 
 ![new repository]({{ site.baseurl }}/images/posts/2019-12-22-create-a-blog-using-jekyll-and-github-pages-with-docker/Screen Shot 2019-12-21 at 15.03.48.png)
@@ -182,7 +190,8 @@ After creating new repository, you can see like following screenshot.
 ## 2 Create new repository on the command line
 Follow the instructions that show on GitHub repository home basically on the jekyll-now foloder, ~/workspace/jekyll-now.  
 
-initialize a local Git repository.  
+initialize a local Git repository.
+
 ```
 % git init
 ```
@@ -193,7 +202,8 @@ yamatokataoka@Yamatos-MacBook-Pro jekyll-now % git init
 Initialized empty Git repository in /Users/yamatokataoka/workspace/jekyll-now/.git/
 ```
 
-Add all files (whcih indicates ".") to the repository staging area  
+Add all files (whcih indicates ".") to the repository staging area
+
 ```
 % git add .
 ```
@@ -204,11 +214,13 @@ yamatokataoka@Yamatos-MacBook-Pro jekyll-now % git add .
 yamatokataoka@Yamatos-MacBook-Pro jekyll-now %
 ```
 
-Create a new commit with a message describing what work was done in the commit (In this case, "first commit")  
+Create a new commit with a message describing what work was done in the commit (In this case, "first commit")
+
 ```
 % git commit -m "first commit"
 ```
-After executing above, your repo will now have all files which you created with jekyll new . command on Docker, added to the history and will track future updates to the files.  
+
+After executing above, your repo will now have all files which you created with jekyll new . command on Docker, added to the history and will track future updates to the files.
 
 <details>
 <summary>log</summary>
@@ -253,6 +265,7 @@ yamatokataoka@Yamatos-MacBook-Pro jekyll-now % git commit -m "first commit"
 </details>
 
 Add your GitHub repository as a remote, replacing USER with the account that owns the repository and REPOSITORY with the name of the repository, it would be <user>.github.io.
+
 ```
 % git remote add origin git@github.com:USER/REPOSITORY
 ```
@@ -263,7 +276,8 @@ yamatokataoka@Yamatos-MacBook-Pro blog % git remote add origin git@github.com:ya
 yamatokataoka@Yamatos-MacBook-Pro blog %
 ```
 
-Push the repository to GitHub, replacing BRANCH with the name of the branch you're working on. (In this guide master)  
+Push the repository to GitHub, replacing BRANCH with the name of the branch you're working on. (In this guide master)
+
 ```
 % git push -u origin BRANCH
 ```
@@ -284,8 +298,10 @@ Branch 'master' set up to track remote branch 'master' from 'origin'.
 yamatokataoka@Yamatos-MacBook-Pro jekyll-now %
 ```
 
-On GitHub, navigate to or reload your site's repository.  
-Check all files are appered on GitHub repository page.  
+On GitHub, navigate to or reload your site's repository.
+
+Check all files are appered on GitHub repository page.
+
 ![files on GitHub repo]({{ site.baseurl }}/images/posts/2019-12-22-create-a-blog-using-jekyll-and-github-pages-with-docker/Screen Shot 2019-12-25 at 19.46.27.png)
 
 ## 3 Publish your site on GitHub Pages
@@ -415,6 +431,7 @@ Replace .highlight to pre on jekyll-now/_sass/_highlights.scss for fixing bug on
 
 ## 3 Update home layout
 Configure to make the navigation bar on the top of a page.
+
 Deleted below css of .container block on syle.scss
 
 ```
@@ -423,6 +440,7 @@ Deleted below css of .container block on syle.scss
 ```
 
 You can try out on your browser with Inspect Element.
+
 ![Inspect Element]({{ site.baseurl }}/images/posts/2019-12-22-create-a-blog-using-jekyll-and-github-pages-with-docker/Screen Shot 2019-12-25 at 20.50.18.png)
 
 after edtting, it looks like this.
