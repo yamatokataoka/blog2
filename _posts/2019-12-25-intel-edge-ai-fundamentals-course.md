@@ -31,9 +31,23 @@ On the [Intel® Edge AI Fundamentals Course](https://www.udacity.com/scholarship
 
 ## Find the Right Models
 
-Choose the models you try out.
+first, press SOURCE ENV button (to source the correct environment).
 
-For example,
+<details>
+<summary>log</summary>
+
+<pre>
+root@a2c7959d88c3:/home/workspace# pip install requests pyyaml -t /usr/local/lib/python3.5/dist-packages && clear && source /opt/intel/openvino/bin/setupvars.sh -pyver 3.5Collecting requests  Downloading https://files.pythonhosted.org/packages/51/bd/23c926cd341ea6b7dd0b2a00aba99ae0f828be89d72b2190f27c11d4b7fb/requests-2.22.0-py2.py3-none-any.whl (57kB)
+    100% |████████████████████████████████| 61kB 2.6MB/s
+Collecting pyyaml
+  Downloading https://files.pythonhosted.org/packages/8d/c9/e5be955a117a1ac548cdd31e37e8fd7b02ce987f9655f5c7563c656d5dcb/PyYAML-5.2.tar.gz (265kB)
+python_version = 3.5
+[setupvars.sh] OpenVINO environment initialized
+(venv) root@a2c7959d88c3:/home/workspace#
+</pre>
+</details>
+
+> Using the [Pre-Trained Model list](https://software.intel.com/en-us/openvino-toolkit/documentation/pretrained-models), determine which models could accomplish the following tasks (there may be some room here in determining which model to download):
 
 - Human Pose Estimation
 
@@ -41,6 +55,16 @@ For example,
 
 - Determining Car Type & Color
 
+You obviously find out the correct models, if you goes to the [Pre-Trained Model list page](https://software.intel.com/en-us/openvino-toolkit/documentation/pretrained-models)
+
+{% include helpers/image.html name="Screen Shot 2019-12-26 at 19.28.11.png" %}
+
 ## Download the Models
 
-Once you have chose the model from [Pre-Trained Model list](https://software.intel.com/en-us/openvino-toolkit/documentation/pretrained-models), download them into the workspace with the precision levels:
+Once you have found the models, download them into the workspace with the precision levels:
+
+- Human Pose Estimation: All precision levels
+
+- Text Detection: FP16 only
+
+- Determining Car Type & Color: INT8 only
