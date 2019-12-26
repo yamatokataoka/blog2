@@ -61,10 +61,190 @@ You obviously find out the correct models, if you goes to the [Pre-Trained Model
 
 ## Download the Models
 
-Once you have found the models, download them into the workspace with the precision levels:
+Once you have found the right models, download them into the workspace with the precision levels:
 
 - Human Pose Estimation: All precision levels
 
 - Text Detection: FP16 only
 
 - Determining Car Type & Color: INT8 only
+
+Using [downloader.py](http://docs.openvinotoolkit.org/latest/_tools_downloader_README.html) and options specifing precision levels, download the models.
+
+First, go to the openvino downloader directory:
+
+```
+# cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader
+```
+
+> cd - command changes directories
+
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@a2c7959d88c3:/home/workspace# cd /opt/intel/openvino/deployment_to
+ols/open_model_zoo/tools/downloader
+(venv) root@a2c7959d88c3:/opt/intel/openvino/deployment_tools/open_model_zoo/t
+ools/downloader# ls -ltotal 292
+-rw-r--r-- 1 root root  17645 Dec  5 23:48 common.py-rwxr-xr-x 1 root root   8263 Dec  5 23:48 converter.py
+-rwxr-xr-x 1 root root  10631 Dec  5 23:48 downloader.py-rwxr-xr-x 1 root root   1954 Dec  5 23:48 info_dumper.py
+-rw-r--r-- 1 root root 213663 Dec  5 23:48 license.txt
+-rw-r--r-- 1 root root   4802 Dec  5 23:48 pytorch_to_onnx.py
+-rw-r--r-- 1 root root  14188 Dec  5 23:48 README.md
+-rw-r--r-- 1 root root     16 Dec  5 23:48 requirements.in
+-rw-r--r-- 1 root root     57 Dec  5 23:48 requirements-pytorch.in
+(venv) root@a2c7959d88c3:/opt/intel/openvino/deployment_tools/open_model_zoo/t
+ools/downloader#
+</pre>
+</details>
+
+<br>
+For Human Pose Estimation: All precision levels:
+
+```
+# ./downloader.py --name human-pose-estimation-0001 -o /home/workspace
+```
+
+> --name human-pose-estimation-0001 - --name option specifies the identifier of the model for downloading (this case, human-pose-estimation-0001)
+>
+> -o /home/workspace - -o option specifies the output directory
+
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@a2c7959d88c3:/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader# ./downloader.py --name human-pose-estimation-0001 -o /home/workspace
+################|| Downloading models ||################
+
+========== Downloading /home/workspace/intel/human-pose-estimation-0001/FP32/h
+uman-pose-estimation-0001.xml
+... 100%, 65 KB, 943 KB/s, 0 seconds passed
+
+========== Downloading /home/workspace/intel/human-pose-estimation-0001/FP32/h
+uman-pose-estimation-0001.bin
+... 100%, 16010 KB, 59127 KB/s, 0 seconds passed
+
+========== Downloading /home/workspace/intel/human-pose-estimation-0001/FP16/human-pose-estimation-0001.xml
+... 100%, 64 KB, 868 KB/s, 0 seconds passed
+
+========== Downloading /home/workspace/intel/human-pose-estimation-0001/FP16/human-pose-estimation-0001.bin
+... 100%, 8005 KB, 63517 KB/s, 0 seconds passed
+
+========== Downloading /home/workspace/intel/human-pose-estimation-0001/INT8/human-pose-estimation-0001.xml
+... 100%, 596 KB, 2700 KB/s, 0 seconds passed
+
+========== Downloading /home/workspace/intel/human-pose-estimation-0001/INT8/human-pose-estimation-0001.bin
+... 100%, 16010 KB, 67096 KB/s, 0 seconds passed
+
+################|| Post-processing ||################
+
+(venv) root@a2c7959d88c3:/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader#
+</pre>
+</details>
+
+<br>
+For Text Detection: FP16 only:
+
+```
+# ./downloader.py --name text-detection-0004 --precisions FP16 -o /home/workspace
+```
+
+> --name text-detection-0004 - choosing text-detection-0004 model
+>
+> --precisions FP16 - --precisions flag to specify precision. By default, the script will produce models in every precision that is supported for conversion.
+
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@a2c7959d88c3:/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader# ./downloader.py --name text-detection-0004 --precisions FP16 -o /home/workspace
+################|| Downloading models ||################
+
+========== Downloading /home/workspace/intel/text-detection-0004/FP16/text-detection-0004.xml
+... 100%, 70 KB, 1052 KB/s, 0 seconds passed
+
+========== Downloading /home/workspace/intel/text-detection-0004/FP16/text-detection-0004.bin
+... 100%, 8453 KB, 55382 KB/s, 0 seconds passed
+
+################|| Post-processing ||################
+
+(venv) root@a2c7959d88c3:/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader#
+</pre>
+</details>
+
+<br>
+For Determining Car Type & Color: INT8 only:
+
+```
+# ./downloader.py --name vehicle-attributes-recognition-barrier-0039 --precisions INT8 -o /home/workspace
+```
+
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@a2c7959d88c3:/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader# ./downloader.py --name vehicle-attributes-recognition-barrier-0039 --precisions INT8 -o /home/workspace
+################|| Downloading models ||################
+
+========== Downloading /home/workspace/intel/vehicle-attributes-recognition-barrier-0039/INT8/vehicle-attributes-recognition-barrier-0039.xml
+... 100%, 62 KB, 713 KB/s, 0 seconds passed
+
+========== Downloading /home/workspace/intel/vehicle-attributes-recognition-barrier-0039/INT8/vehicle-attributes-recognition-barrier-0039.bin
+... 100%, 2445 KB, 38410 KB/s, 0 seconds passed
+
+################|| Post-processing ||################
+
+(venv) root@a2c7959d88c3:/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader
+</pre>
+</details>
+
+## Verify the Downloads
+
+To verify the download of these models by navigating to `/home/workspace/intel` with:
+
+```
+# cd /home/workspace/intel
+# ls -l
+# tree
+```
+
+> ls -l - ls command to lists files and directories within the current directory. With the -l option, ls will list out files and directories in long list format.
+>
+> tree - command to display the content of a directory in a tree-like format
+
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@a2c7959d88c3:/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader# cd /home/workspace/intel
+(venv) root@a2c7959d88c3:/home/workspace/intel# ls -l
+total 12
+drwxr-xr-x 5 root root 4096 Dec 26 12:48 human-pose-estimation-0001
+drwxr-xr-x 3 root root 4096 Dec 26 13:12 text-detection-0004
+drwxr-xr-x 3 root root 4096 Dec 26 13:23 vehicle-attributes-recognition-barrier-0039
+(venv) root@a2c7959d88c3:/home/workspace/intel# tree
+.
+├── human-pose-estimation-0001
+│   ├── FP16
+│   │   ├── human-pose-estimation-0001.bin
+│   │   └── human-pose-estimation-0001.xml
+│   ├── FP32
+│   │   ├── human-pose-estimation-0001.bin
+│   │   └── human-pose-estimation-0001.xml
+│   └── INT8
+│       ├── human-pose-estimation-0001.bin
+│       └── human-pose-estimation-0001.xml
+├── text-detection-0004
+│   └── FP16
+│       ├── text-detection-0004.bin
+│       └── text-detection-0004.xml
+└── vehicle-attributes-recognition-barrier-0039
+    └── INT8
+        ├── vehicle-attributes-recognition-barrier-0039.bin
+        └── vehicle-attributes-recognition-barrier-0039.xml
+
+8 directories, 10 files
+(venv) root@a2c7959d88c3:/home/workspace/intel#
+</pre>
+</details>
