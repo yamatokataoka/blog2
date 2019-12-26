@@ -1,0 +1,30 @@
+/**************/
+/* ToC Rule */
+/**************/
+
+#toc {
+    padding-left: 0;
+    margin: 0;
+    list-style: none;
+
+    li {
+      padding: 8px 0;
+      font-size: 14px;
+      list-style-type: none;
+      border-top: 1px solid #e6e6e6;
+
+      a {
+        color: #787c7b;
+        text-decoration: none!important;
+
+        &:hover {
+          color: #222;
+          text-decoration: none;
+        }
+      }
+
+      ul {
+        padding-top: 8px;
+      }
+    }
+}
