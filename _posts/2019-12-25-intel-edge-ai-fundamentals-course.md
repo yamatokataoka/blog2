@@ -11,8 +11,8 @@ This is a complete guide to walk through Intel® Edge AI Fundamentals Course. Es
 # Goal
 Finish Intel® Edge AI Fundamentals Course sucessfully.
 
-# Play around with Pre-Trained Models
-## Pre-Trained Models
+# Leveraging Pre-Trained Models
+## Loading Pre-Trained Models
 The models are available in OpenVINO™ as pre-trained models like:
 
 - Text Detection
