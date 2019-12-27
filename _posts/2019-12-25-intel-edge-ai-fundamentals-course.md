@@ -33,7 +33,7 @@ On the [Intel® Edge AI Fundamentals Course](https://www.udacity.com/scholarship
 
 ## Find the Right Models
 
-first, press SOURCE ENV button (to source the correct environment).
+first, press `SOURCE ENV` button (to source the correct environment).
 
 <details>
 <summary>log</summary>
@@ -49,7 +49,7 @@ python_version = 3.5
 </pre>
 </details>
 
-> Using the [Pre-Trained Model list](https://software.intel.com/en-us/openvino-toolkit/documentation/pretrained-models), determine which models could accomplish the following tasks (there may be some room here in determining which model to download):
+Using the [Pre-Trained Model list](https://software.intel.com/en-us/openvino-toolkit/documentation/pretrained-models), determine which models could accomplish the following tasks:
 
 - Human Pose Estimation
 
@@ -71,7 +71,7 @@ Once you have found the right models, download them into the workspace with the 
 
 - Determining Car Type & Color: INT8 only
 
-In the first documentation page of each model, the ttitle at the top of the page is the model name to use for downloading. Below example image of Human Pose Estimation shows the name, human-pose-estimation-0001.
+In the first documentation page of each model, the ttitle at the top of the page is the model name to use for downloading. Below example image of Human Pose Estimation shows the name, `human-pose-estimation-0001`.
 
 {% include helpers/image.html name="Screen Shot 2019-12-27 at 21.25.19.png" %}
 
@@ -83,7 +83,7 @@ First, go to the openvino downloader directory:
 # cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader
 ```
 
-> cd - command changes directories
+> `cd` - command changes directories
 
 <details>
 <summary>log</summary>
@@ -112,9 +112,9 @@ For Human Pose Estimation: All precision levels:
 # ./downloader.py --name human-pose-estimation-0001 -o /home/workspace
 ```
 
-> --name human-pose-estimation-0001 - --name option specifies the identifier of the model for downloading (this case, human-pose-estimation-0001)
+> `--name human-pose-estimation-0001` - --name option specifies the identifier of the model for downloading (this case, human-pose-estimation-0001)
 >
-> -o /home/workspace - -o option specifies the output directory
+> `-o /home/workspace` - -o option specifies the output directory
 
 <details>
 <summary>log</summary>
@@ -156,9 +156,9 @@ For Text Detection: FP16 only:
 # ./downloader.py --name text-detection-0004 --precisions FP16 -o /home/workspace
 ```
 
-> --name text-detection-0004 - choosing text-detection-0004 model
+> `--name text-detection-0004` - choosing text-detection-0004 model
 >
-> --precisions FP16 - --precisions flag to specify precision. By default, the script will produce models in every precision that is supported for conversion. and FP16 stands for floating point 16 which is related to precision level
+> `--precisions FP16` - --precisions flag to specify precision. By default, the script will produce models in every precision that is supported for conversion. and FP16 stands for floating point 16 which is related to precision level
 
 <details>
 <summary>log</summary>
@@ -186,7 +186,7 @@ For Determining Car Type & Color: INT8 only:
 # ./downloader.py --name vehicle-attributes-recognition-barrier-0039 --precisions INT8 -o /home/workspace
 ```
 
-> --precisions INT8 - INT8 stands for integer 8 which is related to precision level
+> `--precisions INT8` - INT8 stands for integer 8 which is related to precision level
 
 <details>
 <summary>log</summary>
@@ -225,13 +225,13 @@ To verify the download of these models by navigating to `/home/workspace/intel`.
 </details>
 
 <br>
-you should see three directories - one for each downloaded model (human-pose-estimation-0001, text-detection-0004, and vehicle-attributes-recognition-barrier-0039) with listing command `ls -l`.
+you should see three directories - one for each downloaded model (`human-pose-estimation-0001`, `text-detection-0004`, and `vehicle-attributes-recognition-barrier-0039`) with listing command `ls -l`.
 
 ```
 # ls -l
 ```
 
-> ls -l - ls command to lists files and directories within the current directory. With the -l option, ls will list out files and directories in long list format.
+> `ls -l` - ls command to lists files and directories within the current directory. With the -l option, ls will list out files and directories in long list format.
 
 <details>
 <summary>log</summary>
@@ -246,17 +246,17 @@ drwxr-xr-x 3 root root 4096 Dec 26 13:23 vehicle-attributes-recognition-barrier-
 </details>
 
 <br>
-Within those directories, there should be separate subdirectories for the precisions that were downloaded, and then .xml and .bin files within those subdirectories, that make up the model. `tree` command will you to check those more easily.
+Within those directories, there should be separate subdirectories for the precisions that were downloaded, and then `.xml` and `.bin` files within those subdirectories, that make up the model. `tree` command will you to check those more easily.
 
 ```
 # tree
 ```
 
-> tree - command to display the content of a directory in a tree-like format
+> `tree` - command to display the content of a directory in a tree-like format
 >
-> .xml - xml is a format like .txt, text.
+> `.xml` - xml is a format like .txt, text.
 >
-> .bin - bin stands for binary file, which is the format computer able to read.
+> `.bin` - bin stands for binary file, which is the format computer able to read.
 
 <details>
 <summary>log</summary>
