@@ -201,28 +201,55 @@ For Determining Car Type & Color: INT8 only:
 
 ## Verify the Downloads
 
-To verify the download of these models by navigating to `/home/workspace/intel` with:
+To verify the download of these models by navigating to `/home/workspace/intel`.
 
 ```
 # cd /home/workspace/intel
-# ls -l
-# tree
 ```
-
-> ls -l - ls command to lists files and directories within the current directory. With the -l option, ls will list out files and directories in long list format.
->
-> tree - command to display the content of a directory in a tree-like format
 
 <details>
 <summary>log</summary>
 
 <pre>
 (venv) root@a2c7959d88c3:/opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader# cd /home/workspace/intel
+(venv) root@a2c7959d88c3:/home/workspace/intel#
+</pre>
+</details>
+
+<br>
+you should see three directories - one for each downloaded model (human-pose-estimation-0001, text-detection-0004, and vehicle-attributes-recognition-barrier-0039) with listing command `ls -l`.
+
+```
+# ls -l
+```
+
+> ls -l - ls command to lists files and directories within the current directory. With the -l option, ls will list out files and directories in long list format.
+
+<details>
+<summary>log</summary>
+
+<pre>
 (venv) root@a2c7959d88c3:/home/workspace/intel# ls -l
 total 12
 drwxr-xr-x 5 root root 4096 Dec 26 12:48 human-pose-estimation-0001
 drwxr-xr-x 3 root root 4096 Dec 26 13:12 text-detection-0004
 drwxr-xr-x 3 root root 4096 Dec 26 13:23 vehicle-attributes-recognition-barrier-0039
+</pre>
+</details>
+
+<br>
+Within those directories, there should be separate subdirectories for the precisions that were downloaded, and then .xml and .bin files within those subdirectories, that make up the model. `tree` command will you to check those more easily.
+
+```
+# tree
+```
+
+> tree - command to display the content of a directory in a tree-like format
+
+<details>
+<summary>log</summary>
+
+<pre>
 (venv) root@a2c7959d88c3:/home/workspace/intel# tree
 .
 ├── human-pose-estimation-0001
@@ -248,3 +275,5 @@ drwxr-xr-x 3 root root 4096 Dec 26 13:23 vehicle-attributes-recognition-barrier-
 (venv) root@a2c7959d88c3:/home/workspace/intel#
 </pre>
 </details>
+
+<br>
