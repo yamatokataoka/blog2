@@ -71,6 +71,10 @@ Once you have found the right models, download them into the workspace with the 
 
 - Determining Car Type & Color: INT8 only
 
+In the first documentation page of each model, the ttitle at the top of the page is the model name to use for downloading. Below example image of Human Pose Estimation shows the name, human-pose-estimation-0001.
+
+{% include helpers/image.html name="Screen Shot 2019-12-27 at 21.25.19.png" %}
+
 Using [downloader.py](http://docs.openvinotoolkit.org/latest/_tools_downloader_README.html) and options specifing precision levels, download the models.
 
 First, go to the openvino downloader directory:
