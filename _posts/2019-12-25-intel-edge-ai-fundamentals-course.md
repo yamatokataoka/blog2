@@ -158,7 +158,7 @@ For Text Detection: FP16 only:
 
 > --name text-detection-0004 - choosing text-detection-0004 model
 >
-> --precisions FP16 - --precisions flag to specify precision. By default, the script will produce models in every precision that is supported for conversion.
+> --precisions FP16 - --precisions flag to specify precision. By default, the script will produce models in every precision that is supported for conversion. and FP16 stands for floating point 16 which is related to precision level
 
 <details>
 <summary>log</summary>
@@ -185,6 +185,8 @@ For Determining Car Type & Color: INT8 only:
 ```
 # ./downloader.py --name vehicle-attributes-recognition-barrier-0039 --precisions INT8 -o /home/workspace
 ```
+
+> --precisions INT8 - INT8 stands for integer 8 which is related to precision level
 
 <details>
 <summary>log</summary>
@@ -251,6 +253,10 @@ Within those directories, there should be separate subdirectories for the precis
 ```
 
 > tree - command to display the content of a directory in a tree-like format
+>
+> .xml - xml is a format like .txt, text.
+>
+> .bin - bin stands for binary file, which is the format computer able to read.
 
 <details>
 <summary>log</summary>
