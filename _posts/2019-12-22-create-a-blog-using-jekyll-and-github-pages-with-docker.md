@@ -3,10 +3,14 @@ layout: post
 title: Create a blog using Jekyll and GitHub pages with Docker
 ---
 
-This is a complete guide for blog creating with Jekyll and Docker. Jekyll is a static site generator that you can use to create simple sites or blogs and Github pages is a static site hosting service. With Docker, it could compile or even serve a Jekyll site locally without going through the entire fuss of getting Jekyll up and running on a local machine.
+This is a complete guide for blog creating with Jekyll and Docker. Jekyll is a static site generator that you can use to create simple sites or blogs and Github pages is a static site hosting service.
+
+With Docker, it could compile or even serve a Jekyll site locally without going through the entire fuss of getting Jekyll up and running on a local machine.
+
+After setting up a basic Jekyll Now blog, this guide moves onto more advanced topic dealing with HTML, CSS and Jekyll. You will be more confortable with Jekyll and design your own blog.
 
 # Prerequisites
-- mac
+- Mac
 - A GitHub account
 
 # Goal
@@ -14,10 +18,10 @@ This is what the website we make will look like:
 
 ![example website]({{ site.baseurl }}/images/posts/2019-12-22-create-a-blog-using-jekyll-and-github-pages-with-docker/Screen Shot 2019-12-24 at 19.21.02.png)
 
-# 1 Create a Jekyll blog
+# Create a Jekyll blog
 reference: [https://davemateer.com/2018/01/25/Jekyll-and-Docker](https://davemateer.com/2018/01/25/Jekyll-and-Docker)
 
-## 1 Learn Jekyll and Theme
+## Learn Jekyll and Theme
 [Jekyll](https://jekyllrb.com) is a website generator that’s designed for building minimal, static blogs to be hosted on GitHub Pages.
 
 There are multiple ways to get started with Jekyll, each with its own variations. Here are a few options:
@@ -28,32 +32,59 @@ There are multiple ways to get started with Jekyll, each with its own variations
 
 In this guide, the theme, [Jekyll Now](http://www.github.com/barryclark/jekyll-now) will be used as a starting point.
 
-## 2 Learn Git, GitHub and GitHub Pages
+## Learn Git, GitHub and GitHub Pages
 [Git](https://git-scm.com) is the most widely used modern version control system in the world today.
 
 [GitHub](https://github.com) is a Git repository hosting service, but it adds many of its own features. While Git is a command line tool, GitHub provides a Web-based graphical interface.
 
 [GitHub Pages](https://pages.github.com) is a static site hosting service that takes HTML, CSS, and JavaScript files straight from a repository on GitHub, optionally runs the files through a build process, and publishes a website.
 
-## 3 Set up Git
+## Set up Git
 Follow instructions on [Set up Git](https://help.github.com/en/github/getting-started-with-github/set-up-git#setting-up-git) on GitHub manual.  
 
-## 4 Set up GitHub account
+## Set up GitHub account
 Set up GitHub account with the [official guide](https://help.github.com/en/github/getting-started-with-github/signing-up-for-a-new-github-account).
 
-## 5 Clone a starting point
+## Clone a starting point
 We’ll start by cloning the repository, Jekyll Now, that has followed best practices. This will get us on the right track and save a lot of time.
 
 Open terminal on mac.
 
-Run below command in wherever you want.
+If you don't have workspace folder on your mac, create with `mkdir ~/workspace`.
+
+> `mkdir ~/workspace` - command stands for makes the directory named workspace on ~/ which is home directory
+
+<details>
+<summary>log</summary>
+
+<pre>
+yamatokataoka@Yamatos-MacBook-Pro ~ % mkdir workspace
+yamatokataoka@Yamatos-MacBook-Pro ~ %
+yamatokataoka@Yamatos-MacBook-Pro ~ % ls -l
+total 0
+drwx------@  3 yamatokataoka  staff    96 Dec 21 12:44 Applications
+drwxrwxrwx   5 yamatokataoka  staff   160 Apr 14  2019 Backup
+drwx------+  5 yamatokataoka  staff   160 Dec 27 22:21 Desktop
+drwx------+  4 yamatokataoka  staff   128 Sep 16 19:30 Documents
+drwx------@ 16 yamatokataoka  staff   512 Dec 26 09:17 Downloads
+# ... omitted
+drwxr-xr-x   9 yamatokataoka  staff   288 Sep 23 14:15 share
+drwxr-xr-x  14 yamatokataoka  staff   448 Dec 27 23:37 workspace
+</pre>
+</details>
+
+Run below command in wherever you want (In this guide, `~/workspace`)
 
 ```
 % git clone git@github.com:barryclark/jekyll-now.git
 ```
 
-log
-```
+> `git clone` - git command to copy the repository on GitHub on your local computer
+
+<details>
+<summary>log</summary>
+
+<pre>
 yamatokataoka@Yamatos-MacBook-Pro workspace % git clone git@github.com:barryclark/jekyll-now.git
 Cloning into 'jekyll-now'...
 remote: Enumerating objects: 1300, done.
@@ -76,30 +107,21 @@ drwxr-xr-x  6 yamatokataoka  staff   192 Dec 24 20:34 _sass
 drwxr-xr-x  8 yamatokataoka  staff   256 Dec 24 20:34 images
 -rw-r--r--  1 yamatokataoka  staff   368 Dec 24 20:34 index.html
 -rw-r--r--  1 yamatokataoka  staff  3863 Dec 24 20:34 style.scss
-```
+</pre>
+</details>
 
-To create a local repository with a clean commit history, remove .git folder.
+now jekyll-now setting up has finished on your local.
 
-```
-% rm -rf .git
-```
-
-> rm - command to delete one or more files or directories  
->  
-> -rf - r means recursive removal, it is useful for deleting directory and f which a removal will continue without prompting you
-
-now jekyll-now setting up has finished.
-
-# 1 Set up Docker
-## 1 Learn Docker concepts
+# Set up Docker
+## Learn Docker concepts
 Firstly read the [overview](https://docs.docker.com/engine/docker-overview/) to get basic understanding about docker.
 
 And get started with [Orientation and setup](https://docs.docker.com/get-started/).
 
-## 2 Install Docker
+## Install Docker
 Follow [Install Docker Desktop on mac](https://docs.docker.com/docker-for-mac/install/).
 
-## 3 Pull Jekyll image
+## Pull Jekyll image
 Jekyll provides their own docker image pre-installed Jekyll.
 
 run the Jekyll image on Docker from a new jekyll-now directory
@@ -110,24 +132,26 @@ run the Jekyll image on Docker from a new jekyll-now directory
 
 If you're running this command for the first time, the image for this container won't be on your system, so it'll grab it from the Docker registry first before it runs the container.
 
-> docker - base command for the Docker CLI  
+> `docker` - base command for the Docker CLI  
 >  
-> run - When execute docker run, the container process that runs is isolated in that it has its own file system, its own networking, and its own isolated process tree separate from the host.  
+> `run` - When execute docker run, the container process that runs is isolated in that it has its own file system, its own networking, and its own isolated process tree separate from the host.  
 >  
-> –rm - option remove container after it exits (useful for short lived containers or commands)  
+> `–rm` - option remove container after it exits (useful for short lived containers or commands)  
 >  
-> --volume="$PWD:/srv/jekyll" - option to take the current directory indicated by $PWD and map it to the directory at /srv/jekyll within the container  
+> `--volume="$PWD:/srv/jekyll"` - option to take the current directory indicated by $PWD and map it to the directory at /srv/jekyll within the container  
 >  
-> --volume="$PWD/vendor/bundle:/usr/local/bundle" - option maps the contents of the current directory's /vendor/bundle and maps it to /usr/local/bundle. The reason for this option is so that gems could be cached and reused in future builds  
+> `--volume="$PWD/vendor/bundle:/usr/local/bundle"` - option maps the contents of the current directory's /vendor/bundle and maps it to /usr/local/bundle. The reason for this option is so that gems could be cached and reused in future builds  
 >  
-> -it - interactive terminal so we can see output on the screen  
+> `-it` - interactive terminal so we can see output on the screen  
 >  
-> jekyll/jekyll:latest - this tells it to use the jekyll:3.8 tagged version of the [Jekyll container](https://github.com/envygeeks/jekyll-docker)  
+> `jekyll/jekyll:latest` - this tells it to use the jekyll:3.8 tagged version of the [Jekyll container](https://github.com/envygeeks/jekyll-docker)  
 >  
-> /bin/bash - command we want to run ie go to bash  
+> `/bin/bash` - command we want to run ie go to bash  
 
-log
-```
+<details>
+<summary>log</summary>
+
+<pre>
 yamatokataoka@Yamatos-MacBook-Pro jekyll-now % docker run --rm -it --volume="$PWD:/srv/jekyll" --volume="$PWD/vendor/bundle:/usr/local/bundle" jekyll/jekyll /bin/bash
 Unable to find image 'jekyll/jekyll:latest' locally
 latest: Pulling from jekyll/jekyll
@@ -143,33 +167,34 @@ bash-5.0#
 bash-5.0# exit
 exit
 yamatokataoka@Yamatos-MacBook-Pro jekyll-now %
-```
+</pre>
+</details>
 
-## 4 Serve the site locally
+## Serve the site locally
 run to serve a site locally using port 4000
 
-A Jekyll blog is being generated and served from the Docker container and you can point your browser to localhost:4000 and see the Docker served site.
+A Jekyll blog is being generated and served from the Docker container and you can point your browser to `localhost:4000` and see the Docker served site.
 
 ```
 docker run --rm -it -p 4000:4000 --volume="$PWD:/srv/jekyll" --volume="$PWD/vendor/bundle:/usr/local/bundle" jekyll/jekyll /bin/bash jekyll serve --force_polling
 ```
 
-> -p 4000:4000 - option to expose a container’s internal port 4000 and the exposed port is accessible on the host and the port 4000  
+> ``-p 4000:4000` - option to expose a container’s internal port 4000 and the exposed port is accessible on the host and the port 4000  
 >  
-> jekyll serve - runs the serve command for Jekyll  
+> `jekyll serve` - runs the serve command for Jekyll  
 >  
-> --force_polling - option for Jekyll to force auto-regeneration of the site when files are modified.
+> `--force_polling` - option for Jekyll to force auto-regeneration of the site when files are modified.
 
-see your site by going to localhost:4000 in your browser
-![localhost]({{ site.baseurl }}/images/posts/2019-12-22-create-a-blog-using-jekyll-and-github-pages-with-docker/Screen Shot 2019-12-24 at 22.43.00.png)
+see your site by going to `localhost:4000` in your browser
+{% include helpers/image.html name="Screen Shot 2019-12-24 at 22.43.00.png" %}
 
-# 3 Publish a blog on GitHub Pages
-## 1 Create new GitHub repository
+# Publish a blog on GitHub Pages
+## Create new GitHub repository
 First create a remote repository on GitHub.
 
 In the upper-right corner of any page, use the drop-down menu, and select New repository.
 
-![new repository]({{ site.baseurl }}/images/posts/2019-12-22-create-a-blog-using-jekyll-and-github-pages-with-docker/Screen Shot 2019-12-21 at 15.03.48.png)
+{% include helpers/image.html name="Screen Shot 2019-12-21 at 15.03.48.png" %}
 
 Select or put as the following in the picture below.
 
@@ -181,14 +206,33 @@ Select or put as the following in the picture below.
 
 Click Create repository.
 
-![new repository conf]({{ site.baseurl }}/images/posts/2019-12-22-create-a-blog-using-jekyll-and-github-pages-with-docker/Screen Shot 2019-12-21 at 16.02.59.png)
+{% include helpers/image.html name="Screen Shot 2019-12-21 at 16.02.59.png" %}
 
 After creating new repository, you can see like following screenshot.
 
-![new repository files]({{ site.baseurl }}/images/posts/2019-12-22-create-a-blog-using-jekyll-and-github-pages-with-docker/Screen Shot 2019-12-21 at 16.03.41.png)
+{% include helpers/image.html name="Screen Shot 2019-12-21 at 16.03.41.png" %}
 
-## 2 Create new repository on the command line
-Follow the instructions that show on GitHub repository home basically on the jekyll-now foloder, ~/workspace/jekyll-now.  
+## Create new repository on the command line
+Follow the instructions on the jekyll-now foloder, `~/workspace/jekyll-now` in this guide.
+
+To create a local repository with a clean commit history, remove `.git` folder on the jekyll-now repository.
+
+```
+% rm -rf .git
+```
+
+> `rm` - command to delete one or more files or directories  
+>  
+> `-rf` - r means recursive removal, it is useful for deleting directory and f which a removal will continue without prompting you
+
+<details>
+<summary>log</summary>
+
+<pre>
+yamatokataoka@Yamatos-MacBook-Pro jekyll-now % rm -rf .git
+yamatokataoka@Yamatos-MacBook-Pro jekyll-now %
+</pre>
+</details>
 
 initialize a local Git repository.
 
@@ -196,11 +240,14 @@ initialize a local Git repository.
 % git init
 ```
 
-log
-```
+<details>
+<summary>log</summary>
+
+<pre>
 yamatokataoka@Yamatos-MacBook-Pro jekyll-now % git init
 Initialized empty Git repository in /Users/yamatokataoka/workspace/jekyll-now/.git/
-```
+</pre>
+</details>
 
 Add all files (whcih indicates ".") to the repository staging area
 
@@ -208,11 +255,14 @@ Add all files (whcih indicates ".") to the repository staging area
 % git add .
 ```
 
-log
-```
+<details>
+<summary>log</summary>
+
+<pre>
 yamatokataoka@Yamatos-MacBook-Pro jekyll-now % git add .
 yamatokataoka@Yamatos-MacBook-Pro jekyll-now %
-```
+</pre>
+</details>
 
 Create a new commit with a message describing what work was done in the commit (In this case, "first commit")
 
@@ -264,26 +314,31 @@ yamatokataoka@Yamatos-MacBook-Pro jekyll-now % git commit -m "first commit"
 </pre>
 </details>
 
-Add your GitHub repository as a remote, replacing USER with the account that owns the repository and REPOSITORY with the name of the repository, it would be <user>.github.io.
+Add your GitHub repository as a remote, replacing `USER` with the account that owns the repository and `REPOSITORY` with the name of the repository, it would be `<user>.github.io`.
 
 ```
 % git remote add origin git@github.com:USER/REPOSITORY
 ```
 
-log
-```
+<details>
+<summary>log</summary>
+
+<pre>
 yamatokataoka@Yamatos-MacBook-Pro blog % git remote add origin git@github.com:yamatokataoka/yamatokataoka.github.io.git
 yamatokataoka@Yamatos-MacBook-Pro blog %
-```
+</pre>
+</details>
 
-Push the repository to GitHub, replacing BRANCH with the name of the branch you're working on. (In this guide master)
+Push the repository to GitHub, replacing BRANCH with the name of the branch you're working on. (In this guide, master)
 
 ```
 % git push -u origin BRANCH
 ```
 
-log
-```
+<details>
+<summary>log</summary>
+
+<pre>
 yamatokataoka@Yamatos-MacBook-Pro jekyll-now % git push -u origin master
 Enumerating objects: 49, done.
 Counting objects: 100% (49/49), done.
@@ -296,33 +351,34 @@ To github.com:yamatokataoka/yamatokataoka.github.io.git
  * [new branch]      master -> master
 Branch 'master' set up to track remote branch 'master' from 'origin'.
 yamatokataoka@Yamatos-MacBook-Pro jekyll-now %
-```
+</pre>
+</details>
 
 On GitHub, navigate to or reload your site's repository.
 
 Check all files are appered on GitHub repository page.
 
-![files on GitHub repo]({{ site.baseurl }}/images/posts/2019-12-22-create-a-blog-using-jekyll-and-github-pages-with-docker/Screen Shot 2019-12-25 at 19.46.27.png)
+{% include helpers/image.html name="Screen Shot 2019-12-25 at 19.46.27.png" %}
 
-## 3 Publish your site on GitHub Pages
+## Publish your site on GitHub Pages
 Your Jekyll blog will often be viewable immediately at https://USER.github.io.
 
-![https://USER.github.io]({{ site.baseurl }}/images/posts/2019-12-22-create-a-blog-using-jekyll-and-github-pages-with-docker/Screen Shot 2019-12-25 at 19.52.02.png)
+{% include helpers/image.html name="Screen Shot 2019-12-25 at 19.52.02.png" %}
 
 > Note: It can take up to 20 minutes for changes to your site to publish after you push the changes to GitHub. If your don't see your changes reflected in your browser after an hour  
 
-# 4 Customize and view your site
+# Customize and view your site (Ongoing)
 This is example configurating for Jeyll Now.
 
-## 1 Edit _config.yml file
-Enter your site name, description, avatar and many other options by editing the _config.yml file. You can easily turn on Google Analytics tracking, Disqus commenting and social icons here too.
+## Edit _config.yml file
+Enter your site name, description, avatar and many other options by editing the `_config.yml` file. You can easily turn on Google Analytics tracking, Disqus commenting and social icons here too.
 
 comments below all set up will help you configurating.
 
 My final configuration looks like
 
 <details>
-<summary>conf</summary>
+<summary>_config.yml</summary>
 
 <pre>
 #
@@ -417,7 +473,7 @@ exclude:
 </pre>
 </details>
 
-## 2 Fix highlight scss
+## Fix highlight scss
 Replace .highlight to pre on jekyll-now/_sass/_highlights.scss for fixing bug on Jekyll Now. This bug is reported on the original repository as a [issue](https://github.com/barryclark/jekyll-now/issues/1526).
 
 ```
@@ -429,7 +485,32 @@ Replace .highlight to pre on jekyll-now/_sass/_highlights.scss for fixing bug on
 # ... omitted
 ```
 
-## 3 Update home layout
+## Update highlight scss
+(Ongoing) Here is my `_sass/_highlights.scss`. You may refer this.
+
+<details>
+<summary>_sass/_highlights.scss</summary>
+
+<pre>
+pre {
+  background-color: #efefef;
+  padding: 16px;
+  margin: 20px 0 20px 0;
+  overflow: auto;
+  border-radius: 3px;
+}
+
+code {
+  background-color: #efefef;
+  font-family:'Bitstream Vera Sans Mono','Courier', monospace;
+  border-radius: 3px;
+}
+# ...omitted (the same with original)
+</pre>
+</details>
+
+
+## Update home layout
 Configure to make the navigation bar on the top of a page.
 
 Deleted below css of .container block on syle.scss
@@ -481,4 +562,4 @@ also delete font size specification on blockquote block inside .post.
 # ...omitted
 ```
 
-# 5 Set up Docker Compose (future)
+# Set up Docker Compose (future)
