@@ -289,3 +289,31 @@ Within those directories, there should be separate subdirectories for the precis
 </details>
 
 <br>
+
+# Preprocessing Inputs
+
+Make sure to click the button below before you get started to source the correct environment.
+
+{% include helpers/image.html name="Screen Shot 2019-12-27 at 22.19.40.png" %}
+
+<br>
+<details>
+<summary>log</summary>
+
+<pre>
+root@7d6bb1391047:/home/workspace# source /opt/intel/openvino/bin/setupvars.sh -pyver 3.5
+python_version = 3.5
+[setupvars.sh] OpenVINO environment initialized
+(venv) root@7d6bb1391047:/home/workspace#
+</pre>
+</details>
+
+this exercise will preprocess the inputs for each of the models below:
+
+- Human Pose Estimation: [human-pose-estimation-0001](https://docs.openvinotoolkit.org/latest/_models_intel_human_pose_estimation_0001_description_human_pose_estimation_0001.html)
+
+- Text Detection: [text-detection-0004](http://docs.openvinotoolkit.org/latest/_models_intel_text_detection_0004_description_text_detection_0004.html)
+
+- Determining Car Type & Color: [vehicle-attributes-recognition-barrier-0039](https://docs.openvinotoolkit.org/latest/_models_intel_vehicle_attributes_recognition_barrier_0039_description_vehicle_attributes_recognition_barrier_0039.html)
+
+ you could find these models' binary file (.bin) and xml file (.xml) under `/home/workspace/models`
