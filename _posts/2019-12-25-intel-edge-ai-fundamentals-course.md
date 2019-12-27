@@ -3,10 +3,12 @@ layout: post
 title: Intel® Edge AI Fundamentals Course
 ---
 
-This is a complete guide to walk through Intel® Edge AI Fundamentals Course. Especially, this focuses on the Exercise sections. The Intel® Edge AI Fundamentals Course is the first phase of the Intel® Edge AI Scholarship Program for skills in Intel® Distribution of OpenVINO™ toolkit fundamentals.
+Intel® Edge AI Fundamentals Course is the first phase of the Intel® Edge AI Scholarship Program to train on job relevant skills in Intel® Distribution of OpenVINO™ toolkit fundamentals.
+
+This is a guide to help you walk through the course and deepen your understanding (e.g. what is a meaning of the command you're running). Especially, this focuses on the Exercise sections.
 
 # Prerequisites
-- Work on Intel® Edge AI Fundamentals Course on [Intel® Edge AI Scholarship Program](https://www.udacity.com/scholarships/intel-edge-ai-scholarship) or [Intel® Edge AI for IoT Developers Nano degree](https://www.udacity.com/scholarships/intel-edge-ai-scholarship)
+- Work on Intel® Edge AI Fundamentals Course on [Intel® Edge AI Scholarship Program](https://www.udacity.com/scholarships/intel-edge-ai-scholarship) or Intel® Edge AI for IoT Developers Nano degree (Not yet available now)
 
 # Goal
 Finish Intel® Edge AI Fundamentals Course sucessfully.
