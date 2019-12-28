@@ -308,7 +308,7 @@ python_version = 3.5
 </pre>
 </details>
 
-this exercise will preprocess the inputs for each of the models below:
+In this exercise, we will preprocess the inputs for each of the models below:
 
 - Human Pose Estimation: [human-pose-estimation-0001](https://docs.openvinotoolkit.org/latest/_models_intel_human_pose_estimation_0001_description_human_pose_estimation_0001.html)
 
@@ -316,4 +316,34 @@ this exercise will preprocess the inputs for each of the models below:
 
 - Determining Car Type & Color: [vehicle-attributes-recognition-barrier-0039](https://docs.openvinotoolkit.org/latest/_models_intel_vehicle_attributes_recognition_barrier_0039_description_vehicle_attributes_recognition_barrier_0039.html)
 
- you could find these models' binary file (.bin) and xml file (.xml) under `/home/workspace/models`
+you could find these pre-downloaded models' binary file (.bin) and xml file (.xml) under `/home/workspace/models` on your workspace.
+
+```
+# cd /home/workspace/models
+# ls -l
+```
+
+<details>
+<summary>log</summary>
+
+<pre>
+root@2a5542b94277:/home/workspace# cd /home/workspace/models
+root@2a5542b94277:/home/workspace/models# ls -l
+total 32336
+-rw-r--r-- 1 root root  8197360 Dec 12 23:48 human-pose-estimation-0001.bin
+-rw-r--r-- 1 root root    66557 Dec 12 23:48 human-pose-estimation-0001.xml
+-rw-r--r-- 1 root root 13371780 Dec 12 23:48 semantic-segmentation-adas-0001.bin
+-rw-r--r-- 1 root root    90790 Dec 12 23:48 semantic-segmentation-adas-0001.xml
+-rw-r--r-- 1 root root  8655952 Dec 12 23:48 text-detection-0004.bin
+-rw-r--r-- 1 root root    71863 Dec 12 23:48 text-detection-0004.xml
+-rw-r--r-- 1 root root  2504004 Dec 12 23:48 vehicle-attributes-recognition-barrier-0039.bin
+-rw-r--r-- 1 root root    64190 Dec 12 23:48 vehicle-attributes-recognition-barrier-0039.xml
+root@2a5542b94277:/home/workspace/models#
+</pre>
+</details>
+
+## Human Pose Estimation
+
+## Text Detection
+
+## Determining Car Type & Color
