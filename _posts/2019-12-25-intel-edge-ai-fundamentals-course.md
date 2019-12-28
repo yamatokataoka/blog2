@@ -344,6 +344,25 @@ root@2a5542b94277:/home/workspace/models#
 
 ## Human Pose Estimation
 
+First, check the [input section](https://docs.openvinotoolkit.org/latest/_models_intel_human_pose_estimation_0001_description_human_pose_estimation_0001.html#inputs) of the human-pose-estimation-0001 model to make sure what is input expectation.
+
+As you can see the expectations are:
+
+| name | B (batch size) | C (number of channels) | H (image height) | W (image width) | color order |
+|-------|----------------|------------------------|------------------|-----------------|-------------|
+| input | 1 | 3 | 256 | 456 | BGR |
+
+- name: "input"
+
+- shape: [1x3x256x456] - An input image in the format [BxCxHxW]
+  -  - 3
+  -  - 256
+  -  - 456
+  -  - BGR
+
+The currently loaded image is in the format BGR with H, W, C order. You will adjust the input image to the input prerequisites that you checked above using `preprocess_inputs.py`.
+
+
 ## Text Detection
 
 ## Determining Car Type & Color
