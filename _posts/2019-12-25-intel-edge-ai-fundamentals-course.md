@@ -352,14 +352,6 @@ As you can see the expectations are:
 |-------|----------------|------------------------|------------------|-----------------|-------------|
 | input | 1 | 3 | 256 | 456 | BGR |
 
-- name: "input"
-
-- shape: [1x3x256x456] - An input image in the format [BxCxHxW]
-  -  - 3
-  -  - 256
-  -  - 456
-  -  - BGR
-
 The currently loaded image is in the format BGR with H, W, C order. You will adjust the input image to the input prerequisites that you checked above using `preprocess_inputs.py`.
 
 
