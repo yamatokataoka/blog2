@@ -7,7 +7,7 @@ This is a complete guide for blog creating with Jekyll and Docker. Jekyll is a s
 
 With Docker, it could compile or even serve a Jekyll site locally without going through the entire fuss of getting Jekyll up and running on a local machine.
 
-After setting up a basic Jekyll Now blog, this guide moves onto more advanced topic dealing with HTML, CSS and Jekyll. You will be more confortable with Jekyll and design your own blog.
+After setting up a basic Jekyll Now blog, this guide moves onto more advanced topic dealing with HTML, CSS and Jekyll configuration. You will be more confortable with Jekyll and designing your own blog.
 
 # Prerequisites
 - Mac
