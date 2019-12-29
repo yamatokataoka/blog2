@@ -562,4 +562,8 @@ also delete font size specification on blockquote block inside .post.
 # ...omitted
 ```
 
+the final layout looks like this:
+
+{% include helpers/image.html name="Screen Shot 2019-12-29 at 18.15.38.png" %}
+
 # Set up Docker Compose (future)
