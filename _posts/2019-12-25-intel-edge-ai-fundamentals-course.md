@@ -344,7 +344,9 @@ root@2a5542b94277:/home/workspace/models#
 
 ## Human Pose Estimation
 
-Check the [input section](https://docs.openvinotoolkit.org/latest/_models_intel_human_pose_estimation_0001_description_human_pose_estimation_0001.html#inputs) of the human-pose-estimation-0001 model to make sure what is input expectation.
+This section explains all concepts we faces so it little bit longer but the robust understnading of those commands and code will empower you to go through the rest of the exercise with high fulfilment feeling.
+
+Check the [input section](https://docs.openvinotoolkit.org/latest/_models_intel_human_pose_estimation_0001_description_human_pose_estimation_0001.html#inputs) of the `human-pose-estimation-0001` model to make sure what is input expectation.
 
 the expectations are:
 
