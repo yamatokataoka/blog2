@@ -787,3 +787,47 @@ root@5b564e118360:/home/workspace#
 As you can see, the Text Detection test are passed. pre-processing are done for `text-detection-0004`.
 
 ## Determining Car Type & Color
+
+As the same to the above two models, check the [input section](https://docs.openvinotoolkit.org/latest/_models_intel_vehicle_attributes_recognition_barrier_0039_description_vehicle_attributes_recognition_barrier_0039.html#inputs) of the `text-detection-0004` model to make sure what is input expectation.
+
+The summary is:
+
+| name | B (batch size) | C (number of color channels) | H (image height) | W (image width) | color order |
+|-------|----------------|------------------------|------------------|-----------------|-------------|
+| input | 1 | 3 | 72 | 72 | BGR |
+
+Again, the only difference from what we did before is image height and image width.
+
+Copy and paste the code from `pose_estimation` function, and replace 456 to 72 and 256 to 72.
+
+the function looks like:
+
+```python
+def text_detection(input_image):
+    # omitted
+    preprocessed_image = np.copy(input_image)
+
+    preprocessed_image = cv2.resize(preprocessed_image, (72, 72))
+    preprocessed_image = preprocessed_image.transpose((2,0,1))
+    preprocessed_image=preprocessed_image.reshape(1, 3, 72, 72)
+
+    return preprocessed_image
+```
+
+Then run `python3 test.py`
+
+<details>
+<summary>log</summary>
+
+<pre>
+root@5b564e118360:/home/workspace# python3 test.py
+Passed Pose Estimation test.
+Passed Text Detection test.
+Passed Car Meta test.
+You passed 3 of 3 tests.
+Congratulations!
+root@5b564e118360:/home/workspace#
+</pre>
+</details>
+
+It passed all tests and is done pre-processing for all three models, `human-pose-estimation-0001`, `text-detection-0004`, and `vehicle-attributes-recognition-barrier-0039`.
