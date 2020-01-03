@@ -830,3 +830,108 @@ root@5b564e118360:/home/workspace#
 </details>
 
 It passed all tests and is done pre-processing for all three models, `human-pose-estimation-0001`, `text-detection-0004`, and `vehicle-attributes-recognition-barrier-0039`.
+
+## Solution: Pre-processing Inputs
+
+ For each model, we ended up noticing they needed essentially the same preprocessing, outside of the height and width of the input to the network.
+
+ Add a helper function called `preprocessing` which can be passed in input_image, height, width.
+
+ In the function, make sure to use height and width local veriables.
+
+ ```python
+ def preprocessing(input_image, height, width):
+    '''
+    Given an input image, height and width:
+    - Resize to height and width
+    - Transpose the final "channel" dimension to be first
+    - Reshape the image to add a "batch" of 1 at the start
+    '''
+    image = cv2.resize(input_image, (width, height))
+    image = image.transpose((2,0,1))
+    image = image.reshape(1, 3, height, width)
+
+    return image
+ ```
+
+Now you can replace the dupricated three-line codes on each preprocessing functions
+
+<details>
+<summary>The Solution Code</summary>
+
+<pre>
+import cv2
+import numpy as np
+
+def preprocessing(input_image, height, width):
+   '''
+   Given an input image, height and width:
+   - Resize to height and width
+   - Transpose the final "channel" dimension to be first
+   - Reshape the image to add a "batch" of 1 at the start
+   '''
+   image = cv2.resize(input_image, (width, height))
+   image = image.transpose((2,0,1))
+   image = image.reshape(1, 3, height, width)
+
+   return image
+
+def pose_estimation(input_image):
+    '''
+    Given some input image, preprocess the image so that
+    it can be used with the related pose estimation model
+    you downloaded previously. You can use cv2.resize()
+    to resize the image.
+    '''
+    preprocessed_image = np.copy(input_image)
+
+    preprocessed_image = preprocessing(preprocessed_image, 256, 456)
+
+    return preprocessed_image
+
+
+def text_detection(input_image):
+    '''
+    Given some input image, preprocess the image so that
+    it can be used with the related text detection model
+    you downloaded previously. You can use cv2.resize()
+    to resize the image.
+    '''
+    preprocessed_image = np.copy(input_image)
+
+    preprocessed_image = preprocessing(preprocessed_image, 768, 1280)
+
+    return preprocessed_image
+
+
+def car_meta(input_image):
+    '''
+    Given some input image, preprocess the image so that
+    it can be used with the related car metadata model
+    you downloaded previously. You can use cv2.resize()
+    to resize the image.
+    '''
+    preprocessed_image = np.copy(input_image)
+
+    preprocessed_image = preprocessing(preprocessed_image, 72, 72)
+
+    return preprocessed_image
+</pre>
+</details>
+
+To test this implementation, you can just run `python test.py` again.
+
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@0bc31b756b55:/home/workspace# python test.py
+Passed Pose Estimation test.
+Passed Text Detection test.
+Passed Car Meta test.
+You passed 3 of 3 tests.
+Congratulations!
+</pre>
+</details>
+
+It is still working with nicer way.
