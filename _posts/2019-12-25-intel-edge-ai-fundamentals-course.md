@@ -722,4 +722,67 @@ def pose_estimation(input_image):
 
 ## Text Detection
 
+As the same, check the [input section](http://docs.openvinotoolkit.org/latest/_models_intel_text_detection_0004_description_text_detection_0004.html#inputs) of the `text-detection-0004` model to make sure what is input expectation.
+
+the summary of expectations is:
+
+| name | B (batch size) | C (number of color channels) | H (image height) | W (image width) | color order |
+|-------|----------------|------------------------|------------------|-----------------|-------------|
+| input | 1 | 3 | 768 | 1280 | BGR |
+
+The currently loaded image is in the format BGR with H, W, C order. So no need to change the color order here but H, W, C order.
+
+Move on the `text_detection` function on `preprocess_inputs.py`.
+
+```python
+def text_detection(input_image):
+    '''
+    Given some input image, preprocess the image so that
+    it can be used with the related text detection model
+    you downloaded previously. You can use cv2.resize()
+    to resize the image.
+    '''
+    preprocessed_image = np.copy(input_image)
+
+    # TODO: Preprocess the image for the text detection model
+
+    return preprocessed_image
+```
+
+The only difference from what we did before is image height and image width.
+
+copy and paste the code from `pose_estimation` function, and replace 456 to 1280 and 256 to 768.
+
+the function looks like:
+
+```python
+def text_detection(input_image):
+    # omitted
+    preprocessed_image = np.copy(input_image)
+
+    preprocessed_image = cv2.resize(preprocessed_image, (1280, 768))
+    preprocessed_image = preprocessed_image.transpose((2,0,1))
+    preprocessed_image=preprocessed_image.reshape(1, 3, 768, 1280)
+
+    return preprocessed_image
+```
+
+Run `python3 test.py`
+
+<details>
+<summary>log</summary>
+
+<pre>
+root@5b564e118360:/home/workspace# python3 test.py
+Passed Pose Estimation test.
+Passed Text Detection test.
+Failed Car Meta test, did not obtain expected preprocessed image.
+You passed 2 of 3 tests.
+See above for additional feedback.
+root@5b564e118360:/home/workspace#
+</pre>
+</details>
+
+As you can see, the Text Detection test are passed. pre-processing are done for `text-detection-0004`.
+
 ## Determining Car Type & Color
