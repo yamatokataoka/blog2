@@ -288,8 +288,6 @@ Within those directories, there should be separate subdirectories for the precis
 </pre>
 </details>
 
-<br>
-
 # Preprocessing Inputs
 
 Make sure to click the button below before you get started to source the correct environment.
@@ -344,11 +342,11 @@ root@2a5542b94277:/home/workspace/models#
 
 ## Human Pose Estimation
 
-This section explains all concepts we faces so it little bit longer but the robust understnading of those commands and code will empower you to go through the rest of the exercise with high fulfilment feeling.
+This section explains all concepts we faces so it little bit longer but the robust understnading of those commands and code will empower you to go through the rest of the exercise with fulfilment feeling.
 
 Check the [input section](https://docs.openvinotoolkit.org/latest/_models_intel_human_pose_estimation_0001_description_human_pose_estimation_0001.html#inputs) of the `human-pose-estimation-0001` model to make sure what is input expectation.
 
-the expectations are:
+The expectations are:
 
 | name | B (batch size) | C (number of color channels) | H (image height) | W (image width) | color order |
 |-------|----------------|------------------------|------------------|-----------------|-------------|
@@ -564,9 +562,10 @@ below example is composed of three components: Blue 253 (0-255), Green 227 (0-25
 [253 227 181]
 ```
 
-Reference: [3-dimensional array in numpy](https://stackoverflow.com/questions/22981845/3-dimensional-array-in-numpy)
+Reference: [3-dimensional array in numpy](https://stackoverflow.com/questions/22981845/3-dimensional-array-in-numpy)  
 Reference: [What exactly is BGR color space?](https://stackoverflow.com/questions/367449/what-exactly-is-bgr-color-space)
 
+<br>
 To format C, H, W order in the image, use transpose function.
 
 ```python
@@ -636,7 +635,7 @@ root@5b564e118360:/home/workspace#
 </pre>
 </details>
 
-Finally, add an extra batch dimension for the desired input shape (batch size, # of channels, height, width) using 'reshape' function:
+Finally, add an extra batch dimension for the desired input shape (batch size, # of channels, height, width) using "reshape" function:
 
 ```
 preprocessed_image=preprocessed_image.reshape(1, 3, 256, 456)
@@ -723,7 +722,7 @@ def pose_estimation(input_image):
 
 ## Text Detection
 
-As the same, check the [input section](http://docs.openvinotoolkit.org/latest/_models_intel_text_detection_0004_description_text_detection_0004.html#inputs) of the `text-detection-0004` model to make sure what is input expectation.
+In the same way, check the [input section](http://docs.openvinotoolkit.org/latest/_models_intel_text_detection_0004_description_text_detection_0004.html#inputs) of the `text-detection-0004` model to make sure what is input expectation.
 
 the summary of expectations is:
 
@@ -731,7 +730,7 @@ the summary of expectations is:
 |-------|----------------|------------------------|------------------|-----------------|-------------|
 | input | 1 | 3 | 768 | 1280 | BGR |
 
-The currently loaded image is in the format BGR with H, W, C order. So no need to change the color order here but H, W, C order.
+The currently loaded image is in the format BGR with H, W, C order. So no need to change the color order here but H, W, C order to C, H, W order and add B (batch size).
 
 Move on the `text_detection` function on `preprocess_inputs.py`.
 
@@ -788,7 +787,7 @@ As you can see, the Text Detection test are passed. pre-processing are done for 
 
 ## Determining Car Type & Color
 
-As the same to the above two models, check the [input section](https://docs.openvinotoolkit.org/latest/_models_intel_vehicle_attributes_recognition_barrier_0039_description_vehicle_attributes_recognition_barrier_0039.html#inputs) of the `text-detection-0004` model to make sure what is input expectation.
+As the same manner to the above two models, check the [input section](https://docs.openvinotoolkit.org/latest/_models_intel_vehicle_attributes_recognition_barrier_0039_description_vehicle_attributes_recognition_barrier_0039.html#inputs) of the `text-detection-0004` model to make sure what is input expectation.
 
 The summary is:
 
@@ -796,11 +795,11 @@ The summary is:
 |-------|----------------|------------------------|------------------|-----------------|-------------|
 | input | 1 | 3 | 72 | 72 | BGR |
 
-Again, the only difference from what we did before is image height and image width.
+Again, the only difference from what we did before is image height and width.
 
 Copy and paste the code from `pose_estimation` function, and replace 456 to 72 and 256 to 72.
 
-the function looks like:
+The function looks like:
 
 ```python
 def text_detection(input_image):
