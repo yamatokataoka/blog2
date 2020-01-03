@@ -423,7 +423,8 @@ def pose_estimation(input_image):
 >
 > `print(preprocessed_image)` - this prints preprocessed_image ndarray itself that is 3d array (256, 456, 3)
 
-Run the prepared test on /home/workspace directory on your console
+Run the prepared test on `/home/workspace` directory on your console
+
 ```
 python3 test.py
 ```
@@ -767,7 +768,7 @@ def text_detection(input_image):
     return preprocessed_image
 ```
 
-Run `python3 test.py`
+Run `python3 test.py` on the `/home/workspace`
 
 <details>
 <summary>log</summary>
