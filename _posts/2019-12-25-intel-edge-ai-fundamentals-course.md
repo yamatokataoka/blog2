@@ -288,8 +288,6 @@ Within those directories, there should be separate subdirectories for the precis
 </pre>
 </details>
 
-<br>
-
 # Preprocessing Inputs
 
 Make sure to click the button below before you get started to source the correct environment.
@@ -308,7 +306,7 @@ python_version = 3.5
 </pre>
 </details>
 
-this exercise will preprocess the inputs for each of the models below:
+In this exercise, we will preprocess the inputs for each of the models below:
 
 - Human Pose Estimation: [human-pose-estimation-0001](https://docs.openvinotoolkit.org/latest/_models_intel_human_pose_estimation_0001_description_human_pose_estimation_0001.html)
 
@@ -316,4 +314,519 @@ this exercise will preprocess the inputs for each of the models below:
 
 - Determining Car Type & Color: [vehicle-attributes-recognition-barrier-0039](https://docs.openvinotoolkit.org/latest/_models_intel_vehicle_attributes_recognition_barrier_0039_description_vehicle_attributes_recognition_barrier_0039.html)
 
- you could find these models' binary file (.bin) and xml file (.xml) under `/home/workspace/models`
+you could find these pre-downloaded models' binary file (.bin) and xml file (.xml) under `/home/workspace/models` on your workspace.
+
+```
+# cd /home/workspace/models
+# ls -l
+```
+
+<details>
+<summary>log</summary>
+
+<pre>
+root@2a5542b94277:/home/workspace# cd /home/workspace/models
+root@2a5542b94277:/home/workspace/models# ls -l
+total 32336
+-rw-r--r-- 1 root root  8197360 Dec 12 23:48 human-pose-estimation-0001.bin
+-rw-r--r-- 1 root root    66557 Dec 12 23:48 human-pose-estimation-0001.xml
+-rw-r--r-- 1 root root 13371780 Dec 12 23:48 semantic-segmentation-adas-0001.bin
+-rw-r--r-- 1 root root    90790 Dec 12 23:48 semantic-segmentation-adas-0001.xml
+-rw-r--r-- 1 root root  8655952 Dec 12 23:48 text-detection-0004.bin
+-rw-r--r-- 1 root root    71863 Dec 12 23:48 text-detection-0004.xml
+-rw-r--r-- 1 root root  2504004 Dec 12 23:48 vehicle-attributes-recognition-barrier-0039.bin
+-rw-r--r-- 1 root root    64190 Dec 12 23:48 vehicle-attributes-recognition-barrier-0039.xml
+root@2a5542b94277:/home/workspace/models#
+</pre>
+</details>
+
+## Human Pose Estimation
+
+This section explains all concepts we faces so it little bit longer but the robust understnading of those commands and code will empower you to go through the rest of the exercise with fulfilment feeling.
+
+Check the [input section](https://docs.openvinotoolkit.org/latest/_models_intel_human_pose_estimation_0001_description_human_pose_estimation_0001.html#inputs) of the `human-pose-estimation-0001` model to make sure what is input expectation.
+
+The expectations are:
+
+| name | B (batch size) | C (number of color channels) | H (image height) | W (image width) | color order |
+|-------|----------------|------------------------|------------------|-----------------|-------------|
+| input | 1 | 3 | 256 | 456 | BGR |
+
+> B (batch size) - The batch size means the number of images that will be read through the pre-trained model.
+>
+> C (number of color channels) - it indeicates if image is color or not. If image is grayscale, tuple returned contains only number of rows and columns.
+
+The currently loaded image is in the format BGR with H, W, C order. You will adjust the input image to the above input prerequisites using `preprocess_inputs.py`.
+
+First, you may notice the `import` statement on the top of the file.
+
+```
+import cv2
+import numpy as np
+```
+
+> `import cv2` - import statement to use the OpenCV package in code  
+> [OpenCV Tutorial: A Guide to Learn OpenCV](https://www.pyimagesearch.com/2018/07/19/opencv-tutorial-a-guide-to-learn-opencv/)
+>
+> `import numpy as np` - this imports the numpy package in code and as np statement make it accessible using np in your code
+
+look at the `pose_estimation` function that is used for formating images on `preprocess_inputs.py` at the right top of your workspace.
+
+```python
+def pose_estimation(input_image):
+    '''
+    Given some input image, preprocess the image so that
+    it can be used with the related pose estimation model
+    you downloaded previously. You can use cv2.resize()
+    to resize the image.
+    '''
+    preprocessed_image = np.copy(input_image)
+
+    # TODO: Preprocess the image for the pose estimation model
+
+    return preprocessed_image
+```
+
+> `def pose_estimation(input_image):` - using def keyword defines this function named pose_estimation and the input_image argument can be passed into function.
+>
+> `preprocessed_image = np.copy(input_image)` - this copy() function on np copies the image as numpy.ndarray which is an object stands for a N-dimensional array and then the returning copy assignes to the preprocessed_image variable. Here copy() function works the same as python's deepcopy() which means it constructs a new compound object without references.  
+> Reference: [8.10. copy — Shallow and deep copy operations](https://docs.python.org/3.5/library/copy.html)
+>
+> `return preprocessed_image` - return the value of preprocessed_image which is literally processed image on pose_estimation function
+
+To meet the image size expectation, add below to resize the input image.
+
+```python
+preprocessed_image = cv2.resize(preprocessed_image, (456, 256))
+```
+
+> `preprocessed_image = cv2.resize(preprocessed_image, (456, 256))` - resize function of cv2 resizes the preprocessed_image to the desired size, 456 x 256 pixels. resized image assignes preprocessed_image again.
+
+Now check the ndarray shape information and ndarray itself with print statement which is also useful on debugging. The `pose_estimation` function looks like this:
+
+```python
+def pose_estimation(input_image):
+    # omiited some text
+    preprocessed_image = np.copy(input_image)
+
+    preprocessed_image = cv2.resize(preprocessed_image, (456, 256))
+    print('Shape: {}'.format(preprocessed_image.shape))
+    print(preprocessed_image)
+
+    return preprocessed_image
+```
+
+> `print('Shape: {}'.format(preprocessed_image.shape))` - this prints "Shape: {}" and the brackets { and } within them are replaced with the preprocessed_image.shape which refers to shape attribute of preprocessed_image ndarray, passed into the str.format() method. So finally it prints like "Shape: (256, 456, 3)" on your console  
+> Reference: [7.1. Fancier Output Formatting](https://docs.python.org/3/tutorial/inputoutput.html#fancier-output-formatting)
+>
+> `print(preprocessed_image)` - this prints preprocessed_image ndarray itself that is 3d array (256, 456, 3)
+
+Run the prepared test on `/home/workspace` directory on your console
+
+```
+python3 test.py
+```
+
+<details>
+<summary>log</summary>
+
+<pre>
+root@5b564e118360:/home/workspace# python3 test.py
+Shape: (256, 456, 3)
+[[[254 211 138]
+  [255 212 139]
+  [254 211 138]
+  ...,
+  [255 225 176]
+  [253 226 175]
+  [253 227 181]]
+
+ [[255 212 139]
+  [255 213 140]
+  [255 213 140]
+  ...,
+  [255 230 176]
+  [255 229 173]
+  [254 227 177]]
+
+ [[253 212 139]
+  [254 213 140]
+  [254 213 140]
+  ...,
+  [254 227 177]
+  [253 230 184]
+  [255 237 200]]
+
+ ...,
+ [[ 70  50  43]
+  [ 75  52  46]
+  [ 73  49  43]
+  ...,
+  [217 233 246]
+  [211 228 241]
+  [220 238 250]]
+
+ [[ 69  51  40]
+  [ 74  53  45]
+  [ 75  51  45]
+  ...,
+  [216 230 242]
+  [220 236 247]
+  [206 223 234]]
+
+ [[ 67  50  36]
+  [ 69  49  38]
+  [ 70  47  39]
+  ...,
+  [214 228 240]
+  [205 221 233]
+  [223 239 251]]]
+# omitted ... (explains later)
+root@5b564e118360:/home/workspace#
+</pre>
+</details>
+
+For now, your ndarray of images looks like this:
+
+```
+[[[254 211 138]
+  [255 212 139]
+  [254 211 138]
+  ...,
+  [255 225 176]
+  [253 226 175]
+  [253 227 181]]
+
+ [[255 212 139]
+  [255 213 140]
+  [255 213 140]
+  ...,
+  [255 230 176]
+  [255 229 173]
+  [254 227 177]]
+
+ [[253 212 139]
+  [254 213 140]
+  [254 213 140]
+  ...,
+  [254 227 177]
+  [253 230 184]
+  [255 237 200]]
+
+ ...,
+ [[ 70  50  43]
+  [ 75  52  46]
+  [ 73  49  43]
+  ...,
+  [217 233 246]
+  [211 228 241]
+  [220 238 250]]
+
+ [[ 69  51  40]
+  [ 74  53  45]
+  [ 75  51  45]
+  ...,
+  [216 230 242]
+  [220 236 247]
+  [206 223 234]]
+
+ [[ 67  50  36]
+  [ 69  49  38]
+  [ 70  47  39]
+  ...,
+  [214 228 240]
+  [205 221 233]
+  [223 239 251]]]
+```
+
+The first level of this compound list preprocessed_image has exactly 256 rows (omitted above), as the first dimension of the array a (# of rows/ image width here).
+
+Each of these elements is itself a list with 456 elements (omitted also), which is equal to the second dimension of a (# of columns/ image height)
+
+```
+# omitted ...
+ [[254 211 138]
+  [255 212 139]
+  [254 211 138]
+  ...,
+  [255 225 176]
+  [253 226 175]
+  [253 227 181]]
+# omitted ...
+```
+
+Finally, the most nested lists have 3 elements each, same as the third dimension of a (# of depth/ BGR colors).
+below example is composed of three components: Blue 253 (0-255), Green 227 (0-255) and Red 181 (0-255).
+
+```
+[253 227 181]
+```
+
+Reference: [3-dimensional array in numpy](https://stackoverflow.com/questions/22981845/3-dimensional-array-in-numpy)  
+Reference: [What exactly is BGR color space?](https://stackoverflow.com/questions/367449/what-exactly-is-bgr-color-space)
+
+<br>
+To format C, H, W order in the image, use transpose function.
+
+```python
+preprocessed_image = preprocessed_image.transpose((2,0,1))
+```
+
+> `preprocessed_image = preprocessed_image.transpose((2,0,1))` - transpose function of numpy.ndarray with tuple data type of ints, converts the shape of image ndarray from (256, 456, 3) to (3, 256, 456).  
+> above taple is (2,0,1) which means that 3-rd dimension becomes 1-st dimension, 1-st dimension becomes 2-nd dimension, and 2-nd dimension becomes 3-rd dimension.  
+> Importantly, they are numbered starting with 0 in the taple (2,0,1).  
+> make sure you are working on 3-dimensional array and shape is information about this array.  
+> For more transpose function, [numpy.ndarray.transpose](https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.transpose.html)  
+> Reference: [NUMPY AXES EXPLAINED](https://www.sharpsightlabs.com/blog/numpy-axes-explained/)
+
+Check ndarray of `preprocessed_image` with `pose_estimation` function which looks like:
+
+```python
+def pose_estimation(input_image):
+    # omitted some text
+    preprocessed_image = np.copy(input_image)
+
+    preprocessed_image = cv2.resize(preprocessed_image, (456, 256))
+    print('Shape before: {}'.format(preprocessed_image.shape))
+    preprocessed_image = preprocessed_image.transpose((2,0,1))
+    print('Shape after: {}'.format(preprocessed_image.shape))
+    print(preprocessed_image)
+
+    return preprocessed_image
+```
+
+Run test.py
+```
+python3 test.py
+```
+
+<details>
+<summary>log</summary>
+
+<pre>
+root@5b564e118360:/home/workspace# python3 test.py
+Shape before: (256, 456, 3)
+Shape after: (3, 256, 456)
+[[[254 255 254 ..., 255 253 253]
+  [255 255 255 ..., 255 255 254]
+  [253 254 254 ..., 254 253 255]
+  ...,
+  [ 70  75  73 ..., 217 211 220]
+  [ 69  74  75 ..., 216 220 206]
+  [ 67  69  70 ..., 214 205 223]]
+
+ [[211 212 211 ..., 225 226 227]
+  [212 213 213 ..., 230 229 227]
+  [212 213 213 ..., 227 230 237]
+  ...,
+  [ 50  52  49 ..., 233 228 238]
+  [ 51  53  51 ..., 230 236 223]
+  [ 50  49  47 ..., 228 221 239]]
+
+ [[138 139 138 ..., 176 175 181]
+  [139 140 140 ..., 176 173 177]
+  [139 140 140 ..., 177 184 200]
+  ...,
+  [ 43  46  43 ..., 246 241 250]
+  [ 40  45  45 ..., 242 247 234]
+  [ 36  38  39 ..., 240 233 251]]]
+# omitted ...
+root@5b564e118360:/home/workspace#
+</pre>
+</details>
+
+Finally, add an extra batch dimension for the desired input shape (batch size, # of channels, height, width) using "reshape" function:
+
+```
+preprocessed_image=preprocessed_image.reshape(1, 3, 256, 456)
+```
+
+Check `preprocessed_image` adding print after above statement
+
+```python
+def pose_estimation(input_image):
+    # omitted ...
+    preprocessed_image = np.copy(input_image)
+
+    preprocessed_image = cv2.resize(preprocessed_image, (456, 256))
+    preprocessed_image = preprocessed_image.transpose((2,0,1))
+    preprocessed_image=preprocessed_image.reshape(1, 3, 256, 456)
+    print('Shape: {}'.format(preprocessed_image.shape))
+    print(preprocessed_image)
+
+    return preprocessed_image
+```
+
+Run
+```
+python3 test.py
+```
+
+<details>
+<summary>log</summary>
+
+<pre>
+root@5b564e118360:/home/workspace# python3 test.py
+Shape: (1, 3, 256, 456)
+[[[[254 255 254 ..., 255 253 253]
+   [255 255 255 ..., 255 255 254]
+   [253 254 254 ..., 254 253 255]
+   ...,
+   [ 70  75  73 ..., 217 211 220]
+   [ 69  74  75 ..., 216 220 206]
+   [ 67  69  70 ..., 214 205 223]]
+
+  [[211 212 211 ..., 225 226 227]
+   [212 213 213 ..., 230 229 227]
+   [212 213 213 ..., 227 230 237]
+   ...,
+   [ 50  52  49 ..., 233 228 238]
+   [ 51  53  51 ..., 230 236 223]
+   [ 50  49  47 ..., 228 221 239]]
+
+  [[138 139 138 ..., 176 175 181]
+   [139 140 140 ..., 176 173 177]
+   [139 140 140 ..., 177 184 200]
+   ...,
+   [ 43  46  43 ..., 246 241 250]
+   [ 40  45  45 ..., 242 247 234]
+   [ 36  38  39 ..., 240 233 251]]]]
+Passed Pose Estimation test.
+Failed Text Detection test, did not obtain expected preprocessed image.
+Failed Car Meta test, did not obtain expected preprocessed image.
+You passed 1 of 3 tests.
+See above for additional feedback.
+root@5b564e118360:/home/workspace#
+</pre>
+</details>
+
+Now you notice the additional dimension for batch size on the shape and the extra square braces on the preprocessed_image itself
+
+The bottom text says that "Passed Pose Estimation test." and finished pre-processing for Pose Estimation pre-trained model.
+
+If you don't need the print statement you can comment out or delete them from your code.
+
+The final `preprocessed_image` function looks like:
+
+```python
+def pose_estimation(input_image):
+    # omitted ...
+    preprocessed_image = np.copy(input_image)
+
+    preprocessed_image = cv2.resize(preprocessed_image, (456, 256))
+    preprocessed_image = preprocessed_image.transpose((2,0,1))
+    preprocessed_image=preprocessed_image.reshape(1, 3, 256, 456)
+
+    return preprocessed_image
+```
+
+## Text Detection
+
+In the same way, check the [input section](http://docs.openvinotoolkit.org/latest/_models_intel_text_detection_0004_description_text_detection_0004.html#inputs) of the `text-detection-0004` model to make sure what is input expectation.
+
+the summary of expectations is:
+
+| name | B (batch size) | C (number of color channels) | H (image height) | W (image width) | color order |
+|-------|----------------|------------------------|------------------|-----------------|-------------|
+| input | 1 | 3 | 768 | 1280 | BGR |
+
+The currently loaded image is in the format BGR with H, W, C order. So no need to change the color order here but H, W, C order to C, H, W order and add B (batch size).
+
+Move on the `text_detection` function on `preprocess_inputs.py`.
+
+```python
+def text_detection(input_image):
+    '''
+    Given some input image, preprocess the image so that
+    it can be used with the related text detection model
+    you downloaded previously. You can use cv2.resize()
+    to resize the image.
+    '''
+    preprocessed_image = np.copy(input_image)
+
+    # TODO: Preprocess the image for the text detection model
+
+    return preprocessed_image
+```
+
+The only difference from what we did before is image height and image width.
+
+copy and paste the code from `pose_estimation` function, and replace 456 to 1280 and 256 to 768.
+
+the function looks like:
+
+```python
+def text_detection(input_image):
+    # omitted
+    preprocessed_image = np.copy(input_image)
+
+    preprocessed_image = cv2.resize(preprocessed_image, (1280, 768))
+    preprocessed_image = preprocessed_image.transpose((2,0,1))
+    preprocessed_image=preprocessed_image.reshape(1, 3, 768, 1280)
+
+    return preprocessed_image
+```
+
+Run `python3 test.py` on the `/home/workspace`
+
+<details>
+<summary>log</summary>
+
+<pre>
+root@5b564e118360:/home/workspace# python3 test.py
+Passed Pose Estimation test.
+Passed Text Detection test.
+Failed Car Meta test, did not obtain expected preprocessed image.
+You passed 2 of 3 tests.
+See above for additional feedback.
+root@5b564e118360:/home/workspace#
+</pre>
+</details>
+
+As you can see, the Text Detection test are passed. pre-processing are done for `text-detection-0004`.
+
+## Determining Car Type & Color
+
+As the same manner to the above two models, check the [input section](https://docs.openvinotoolkit.org/latest/_models_intel_vehicle_attributes_recognition_barrier_0039_description_vehicle_attributes_recognition_barrier_0039.html#inputs) of the `text-detection-0004` model to make sure what is input expectation.
+
+The summary is:
+
+| name | B (batch size) | C (number of color channels) | H (image height) | W (image width) | color order |
+|-------|----------------|------------------------|------------------|-----------------|-------------|
+| input | 1 | 3 | 72 | 72 | BGR |
+
+Again, the only difference from what we did before is image height and width.
+
+Copy and paste the code from `pose_estimation` function, and replace 456 to 72 and 256 to 72.
+
+The function looks like:
+
+```python
+def text_detection(input_image):
+    # omitted
+    preprocessed_image = np.copy(input_image)
+
+    preprocessed_image = cv2.resize(preprocessed_image, (72, 72))
+    preprocessed_image = preprocessed_image.transpose((2,0,1))
+    preprocessed_image=preprocessed_image.reshape(1, 3, 72, 72)
+
+    return preprocessed_image
+```
+
+Then run `python3 test.py`
+
+<details>
+<summary>log</summary>
+
+<pre>
+root@5b564e118360:/home/workspace# python3 test.py
+Passed Pose Estimation test.
+Passed Text Detection test.
+Passed Car Meta test.
+You passed 3 of 3 tests.
+Congratulations!
+root@5b564e118360:/home/workspace#
+</pre>
+</details>
+
+It passed all tests and is done pre-processing for all three models, `human-pose-estimation-0001`, `text-detection-0004`, and `vehicle-attributes-recognition-barrier-0039`.
