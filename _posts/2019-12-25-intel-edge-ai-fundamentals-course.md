@@ -39,7 +39,7 @@ first, press `SOURCE ENV` button (to source the correct environment).
 <summary>log</summary>
 
 <pre>
-root@a2c7959d88c3:/home/workspace# pip install requests pyyaml -t /usr/local/lib/python3.5/dist-packages && clear && source /opt/intel/openvino/bin/setupvars.sh -pyver 3.5Collecting requests  Downloading https://files.pythonhosted.org/packages/51/bd/23c926cd341ea6b7dd0b2a00aba99ae0f828be89d72b2190f27c11d4b7fb/requests-2.22.0-py2.py3-none-any.whl (57kB)
+root@a2c7959d88c3:/home/workspace# pip install requests pyyaml -t /usr/local/lib/python.5/dist-packages && clear && source /opt/intel/openvino/bin/setupvars.sh -pyver 3.5Collecting requests  Downloading https://files.pythonhosted.org/packages/51/bd/23c926cd341ea6b7dd0b2a00aba99ae0f828be89d72b2190f27c11d4b7fb/requests-2.22.0-py2.py3-none-any.whl (57kB)
     100% |████████████████████████████████| 61kB 2.6MB/s
 Collecting pyyaml
   Downloading https://files.pythonhosted.org/packages/8d/c9/e5be955a117a1ac548cdd31e37e8fd7b02ce987f9655f5c7563c656d5dcb/PyYAML-5.2.tar.gz (265kB)
@@ -406,7 +406,7 @@ Now check the ndarray shape information and ndarray itself with print statement 
 
 ```python
 def pose_estimation(input_image):
-    # omiited some text
+    # omitted some text
     preprocessed_image = np.copy(input_image)
 
     preprocessed_image = cv2.resize(preprocessed_image, (456, 256))
@@ -424,14 +424,14 @@ def pose_estimation(input_image):
 Run the prepared test on `/home/workspace` directory on your console
 
 ```
-python3 test.py
+python test.py
 ```
 
 <details>
 <summary>log</summary>
 
 <pre>
-root@5b564e118360:/home/workspace# python3 test.py
+root@5b564e118360:/home/workspace# python test.py
 Shape: (256, 456, 3)
 [[[254 211 138]
   [255 212 139]
@@ -597,14 +597,14 @@ def pose_estimation(input_image):
 
 Run test.py
 ```
-python3 test.py
+python test.py
 ```
 
 <details>
 <summary>log</summary>
 
 <pre>
-root@5b564e118360:/home/workspace# python3 test.py
+root@5b564e118360:/home/workspace# python test.py
 Shape before: (256, 456, 3)
 Shape after: (3, 256, 456)
 [[[254 255 254 ..., 255 253 253]
@@ -659,14 +659,14 @@ def pose_estimation(input_image):
 
 Run
 ```
-python3 test.py
+python test.py
 ```
 
 <details>
 <summary>log</summary>
 
 <pre>
-root@5b564e118360:/home/workspace# python3 test.py
+root@5b564e118360:/home/workspace# python test.py
 Shape: (1, 3, 256, 456)
 [[[[254 255 254 ..., 255 253 253]
    [255 255 255 ..., 255 255 254]
@@ -767,13 +767,13 @@ def text_detection(input_image):
     return preprocessed_image
 ```
 
-Run `python3 test.py` on the `/home/workspace`
+Run `python test.py` on the `/home/workspace`
 
 <details>
 <summary>log</summary>
 
 <pre>
-root@5b564e118360:/home/workspace# python3 test.py
+root@5b564e118360:/home/workspace# python test.py
 Passed Pose Estimation test.
 Passed Text Detection test.
 Failed Car Meta test, did not obtain expected preprocessed image.
@@ -813,13 +813,13 @@ def text_detection(input_image):
     return preprocessed_image
 ```
 
-Then run `python3 test.py`
+Then run `python test.py`
 
 <details>
 <summary>log</summary>
 
 <pre>
-root@5b564e118360:/home/workspace# python3 test.py
+root@5b564e118360:/home/workspace# python test.py
 Passed Pose Estimation test.
 Passed Text Detection test.
 Passed Car Meta test.
@@ -935,3 +935,176 @@ Congratulations!
 </details>
 
 It is still working with nicer way.
+
+# Deploy Your First Edge App
+
+Make sure to click the button, `SOURCE ENV` before you get started to source the correct environment.
+
+<details>
+<summary>log</summary>
+
+<pre>
+root@d1a6654df463:/home/workspace# source /opt/intel/openvino/bin/setupvars.sh -pyver 3.5
+python_version = 3.5
+[setupvars.sh] OpenVINO environment initialized
+(venv) root@d1a6654df463:/home/workspace#
+</pre>
+</details>
+
+Here you will just need to call your functions to handle the input and output of the model within the app.
+
+We don't touch the code about the Model Optimizer now.
+
+You will work out of the `handle_models.py` file, as well as adding functions calls within the edge app in `app.py`.
+
+## TODOs
+
+You will implement the handling of the outputs of our three models on `handle_models.py`.
+
+Notice that there are two TODOs for each handle function to determine the each output on the first three functions.
+
+The 4th function, named `handle_output` is the function returns one of the above three functions to handle an output, based on the `model_type` being used.
+
+The last one is `preprocessing` function you wrote on the previous exercise.
+
+```python
+import cv2
+import numpy as np
+
+
+def handle_pose(output, input_shape):
+    '''
+    Handles the output of the Pose Estimation model.
+    Returns ONLY the keypoint heatmaps, and not the Part Affinity Fields.
+    '''
+    # TODO 1: Extract only the second blob
+    # TODO 2: Resize the heatmap back to the size of the input
+
+    return output
+
+
+def handle_text(output, input_shape):
+    '''
+    Handles the output of the Text Detection model.
+    Returns ONLY the text/no text classification of each pixel,
+        and not the linkage between pixels and their neighbors.
+    '''
+    # TODO 1: Extract only the first blob output (text/no text classification)
+    # TODO 2: Resize this output back to the size of the input
+
+    return None
+
+
+def handle_car(output, input_shape):
+    '''
+    Handles the output of the Car Metadata model.
+    Returns two integers: the argmax of each softmax output.
+    The first is for color, and the second for type.
+    '''
+    # TODO 1: Get the argmax of the "color" output
+    # TODO 2: Get the argmax of the "type" output
+
+    return None
+
+
+def handle_output(model_type):
+    '''
+    Returns the related function to handle an output,
+        based on the model_type being used.
+    '''
+    if model_type == "POSE":
+        return handle_pose
+    elif model_type == "TEXT":
+        return handle_text
+    elif model_type == "CAR_META":
+        return handle_car
+    else:
+        return None
+
+
+'''
+The below function is carried over from the previous exercise.
+You just need to call it appropriately in `app.py` to preprocess
+the input image.
+'''
+def preprocessing(input_image, height, width):
+    '''
+    Given an input image, height and width:
+    - Resize to width and height
+    - Transpose the final "channel" dimension to be first
+    - Reshape the image to add a "batch" of 1 at the start
+    '''
+    image = np.copy(input_image)
+    image = cv2.resize(image, (width, height))
+    image = image.transpose((2,0,1))
+    image = image.reshape(1, 3, height, width)
+
+    return image
+```
+
+Here is two TODOs on the `handle_pose` function. For `TODO 1: Extract only the second blob`, refer the output information on [outputs section](https://docs.openvinotoolkit.org/latest/_models_intel_human_pose_estimation_0001_description_human_pose_estimation_0001.html#outputs) of the `human_pose_estimation_0001` page.
+
+```python
+def handle_pose(output, input_shape):
+    '''
+    Handles the output of the Pose Estimation model.
+    Returns ONLY the keypoint heatmaps, and not the Part Affinity Fields.
+    '''
+    # TODO 1: Extract only the second blob
+    # TODO 2: Resize the heatmap back to the size of the input
+
+    return output
+```
+
+Check what is exactly the output type to extract the second blob which contains keypoint heatmaps.
+
+For checking the data type, implement `app.py` first, because the `handle_pose` function calling from `app.py` is much more easier for debugging.
+
+Let's have a close look at the the first part of the `app.py`.
+
+```python
+import argparse
+import cv2
+import numpy as np
+
+from handle_models import handle_output, preprocessing
+from inference import Network
+
+
+CAR_COLORS = ["white", "gray", "yellow", "red", "green", "blue", "black"]
+CAR_TYPES = ["car", "bus", "truck", "van"]
+```
+
+> `import argparse` - import the argparse module to write user-friendly command-line interfaces more easily.
+>
+> `from handle_models import handle_output, preprocessing` - this imports handle_output and preprocessing functions from handle_models.py file.
+>
+> `from inference import Network` - this imports Network class from inference.py file.
+>
+> `CAR_COLORS = ["white", "gray", "yellow", "red", "green", "blue", "black"]`  
+> `CAR_TYPES = ["car", "bus", "truck", "van"]` - defines these arrays for labeling car colors and car types of output on vehicle-attributes-recognition-barrier-0039 pre-trained model
+
+There are two parts having a defined starting point for the execution of a program called main function.
+
+```python
+def main():
+    args = get_args()
+    perform_inference(args)
+
+
+if __name__ == "__main__":
+    main()
+```
+
+> `def main():` - this defined the function called main() and inside this there are args = get_args() and perform_inference(args)
+>
+> `args = get_args()` - this statement calls get_args() function and assign return value to args variable ()
+>
+> `perform_inference(args)` - This code executes perform_inference function with the args parameter which is assigned on args = get_args()
+>
+> `if __name__ == "__main__":` - this is the best practice for Python main functions. if statement checks the special \__name__ variable and compare it to the string "\__main__". If it is True, the Python interpreter executes main() function.
+>
+> The special \__name__ variable is defined by Python when it executed.  
+> When you execute the Python file as a script using the command line like `python app.py`, \__name__ variable will have the string value "\__main__".  
+> As the second way, the Python interpreter will execute your code: imports using like `import cv2`, \__name__ variable will have the string value "cv2" in this case.  
+> Reference: [Defining Main Functions in Python](https://realpython.com/python-main-function/)
