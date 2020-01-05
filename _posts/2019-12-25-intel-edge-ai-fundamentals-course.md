@@ -1201,7 +1201,8 @@ python app.py -h
 As you can see that `_action_groups` is list class accroding to `Type: <class 'list'>` and `optional arguments:` part is shown here because it is not deleted using pop function.
 
 log
-```bash
+
+```
 (venv) root@125f05bfb32a:/home/workspace# python app.py -h
 Type: <class 'list'>
 usage: Basic Edge App with Inference Engine [-h] -i I -m M -t T [-c C] [-d D]
@@ -1326,3 +1327,5 @@ The next TODO is about processing the output of the pre-trained model. Accroding
 > `processed_output = output_function(output, image.shape)` - Using `output_function` function with the raw output and shape properties, `image.shape`, it process the output. Your processed_output image will be used on the next line `output_image = create_output_image(args.t, image, processed_output)`.
 
 Now you implemented the `app.py`, now it is time to back `handle_models.py` TODOs.
+
+## handle_models.py
