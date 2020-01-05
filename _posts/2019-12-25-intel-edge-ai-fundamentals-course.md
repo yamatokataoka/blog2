@@ -1110,3 +1110,219 @@ if __name__ == "__main__":
 > When you execute the Python file as a script using the command line like `python app.py`, \__name__ variable will have the string value "\__main__".  
 > As the second way, the Python interpreter will execute your code: imports using like `import cv2`, \__name__ variable will have the string value "cv2" in this case.  
 > Reference: [Defining Main Functions in Python](https://realpython.com/python-main-function/)
+
+Here `get_args()` is called from the starting point, main function. The function retrieves the arguments when the code executed.
+
+The arguments come from when the `app.py` is executed on the command line.
+
+For example, here is `-i`, `-t`, `-m` and `-c` arguments which is handled by `get_args` function and passed to the further functions.
+
+```bash
+python app.py -i "images/blue-car.jpg" -t "CAR_META" -m "/home/workspace/models/vehicle-attributes-recognition-barrier-0039.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+```
+
+{::options parse_block_html="true" /}
+
+<details>
+<summary markdown="span">More Detail for get_args Function</summary>
+
+This is the first step in using the argparse is creating an ArgumentParser object.
+
+```python
+def get_args():
+    '''
+    Gets the arguments from the command line.
+    '''
+
+    parser = argparse.ArgumentParser("Basic Edge App with Inference Engine")
+
+# omitted ...
+```
+
+> `parser = argparse.ArgumentParser("Basic Edge App with Inference Engine")` - The `argparse.ArgumentParser` creates the object of ArgumentParser class on Lib/argparse.py which you imported. The ArgumentParser object will hold all the information necessary to parse the command line into Python data types.  
+> "Basic Edge App with Inference Engine" string value is passed in for description to display before the argument help. It shows like this:  
+> Reference: [Create object from class in separate file](https://stackoverflow.com/a/23238374)
+
+log
+```
+(venv) root@044969e5b664:/home/workspace# python app.py -h
+usage: Basic Edge App with Inference Engine [-h] -i I -m M -t T [-c C] [-d D]
+
+# omitted ...
+(venv) root@044969e5b664:/home/workspace#
+```
+
+For preparation of the descriptions for the each arguments, it creates string vlues wich is used later.
+
+```python
+# -- Create the descriptions for the commands
+
+c_desc = "CPU extension file location, if applicable"
+d_desc = "Device, if not CPU (GPU, FPGA, MYRIAD)"
+i_desc = "The location of the input image"
+m_desc = "The location of the model XML file"
+t_desc = "The type of model: POSE, TEXT or CAR_META"
+```
+
+The next few lines are configuring the argument groups for showing the help messages when running with `-h` or `--help` argument.
+
+```python
+# -- Add required and optional groups
+parser._action_groups.pop()
+required = parser.add_argument_group('required arguments')
+optional = parser.add_argument_group('optional arguments')
+```
+
+> `parser._action_groups.pop()` -  By default, ArgumentParser groups command-line arguments into “positional arguments” and “optional arguments” which is stored in `_action_groups` internally when displaying help messages. To show the argument groups more sophisticated way, it can be removed last argument group from the list, “optional arguments”. Without popping (removing) the “optional arguments”, optional argument group shows up first by default.  
+> Reference: [Argparse: Required arguments listed under “optional arguments”?](https://stackoverflow.com/questions/24180527/argparse-required-arguments-listed-under-optional-arguments)
+>
+> `required = parser.add_argument_group('required arguments')` - New argument group called 'required arguments' is created for a better conceptual grouping of arguments than this default one. the returned argument group object assignes the variable, required.
+>
+> `optional = parser.add_argument_group('optional arguments')` - The same concept is applied here. It re-creates the 'optional arguments' group because the the default 'optional arguments' group is deleted and to shows the optional group under the 'required arguments' group
+
+Check the data type of the `parser._action_groups` and comment out the `parser._action_groups.pop()` line to understand how it works in `app.py` code.
+
+```python
+# -- Add required and optional groups
+print('Type: {}'.format(type(parser._action_groups)))
+# parser._action_groups.pop()
+required = parser.add_argument_group('required arguments')
+optional = parser.add_argument_group('optional arguments')
+```
+
+Then run on the command line to show help messages.
+
+```
+python app.py -h
+```
+
+> `-h` - which is a default option to show help messages.
+
+As you can see that `_action_groups` is list class accroding to `Type: <class 'list'>` and `optional arguments:` part is shown here because it is not deleted using pop function.
+
+log
+```bash
+(venv) root@125f05bfb32a:/home/workspace# python app.py -h
+Type: <class 'list'>
+usage: Basic Edge App with Inference Engine [-h] -i I -m M -t T [-c C] [-d D]
+
+optional arguments:
+  -h, --help  show this help message and exit
+
+required arguments:
+  -i I        The location of the input image
+  -m M        The location of the model XML file
+  -t T        The type of model: POSE, TEXT or CAR_META
+
+optional arguments:
+  -c C        CPU extension file location, if applicable
+  -d D        Device, if not CPU (GPU, FPGA, MYRIAD)
+```
+
+Those arguments such as "-i" and "-m" is defined with some parameters and assigned to the each required and optional argument groups created at the above part.
+
+```python
+# -- Create the arguments
+required.add_argument("-i", help=i_desc, required=True)
+required.add_argument("-m", help=m_desc, required=True)
+required.add_argument("-t", help=t_desc, required=True)
+optional.add_argument("-c", help=c_desc, default=None)
+optional.add_argument("-d", help=d_desc, default="CPU")
+args = parser.parse_args()
+
+return args
+```
+
+> `required.add_argument("-i", help=i_desc, required=True)` - For the "-i" argument, adding `i_desc` variable as a brief description of what the argument does in `help=i_desc`. Also it is flaged as a required argument when you use `app.py`.
+> `required.add_argument("-m", help=m_desc, required=True)`  
+> `required.add_argument("-t", help=t_desc, required=True)` - Those "-m" and "-t" is also added the required argument group.
+>
+> `optional.add_argument("-c", help=c_desc, default=None)` - Almost same one as you did above, the "-c" argument is added in optional argument group you created above and the value parameter produced as None here if the argument is absent from the command line which means optional argument, in other words.
+>
+> `optional.add_argument("-d", help=d_desc, default="CPU")` - If "-d" is not passed in on the command line, the value, "CPU" is filled in by default.
+>
+> `args = parser.parse_args()` - It parses arguments (like "-h" on `python app.py -h`) through the parse_args() method. This will inspect the command line, convert each argument to the appropriate type and then invoke the appropriate action.  
+> Reference: [Parsing a Command Line](https://pymotw.com/2/argparse/#parsing-a-command-line)
+
+</details>
+
+{::options parse_block_html="false" /}
+<br>
+
+After executing `get_args()` function, it executes `perform_inference(args)` for preprocessing and handling the output image created by the pre-trained model.
+
+```python
+def perform_inference(args):
+    '''
+    Performs inference on an input image, given a model.
+    '''
+    # Create a Network for using the Inference Engine
+    inference_network = Network()
+    # Load the model in the network, and obtain its input shape
+    n, c, h, w = inference_network.load_model(args.m, args.d, args.c)
+
+    # Read the input image
+    image = cv2.imread(args.i)
+
+    ### TODO: Preprocess the input image
+
+    # Perform synchronous inference on the image
+    inference_network.sync_inference(preprocessed_image)
+
+    # Obtain the output of the inference request
+    output = inference_network.extract_output()
+
+    ### TODO: Handle the output of the network, based on args.t
+    ### Note: This will require using `handle_output` to get the correct
+    ###       function, and then feeding the output to that function.
+
+    # Create an output image based on network
+    output_image = create_output_image(args.t, image, processed_output)
+
+    # Save down the resulting image
+    cv2.imwrite("outputs/{}-output.png".format(args.t), output_image)
+
+```
+
+> `inference_network = Network()` - `Network()` function comes from inference.py file which imported the first section of codes. The inference.py contains code for working with the Inference Engine. You'll learn how to implement this code and more in the related lesson on the topic.
+>
+> `n, c, h, w = inference_network.load_model(args.m, args.d, args.c)` - (explanis later lessons) it feeds in args.m (The location of the model .xml file), args.d (Device, default value is CPU), args.c (CPU extension file location).  
+> It returns the model's input shape information, n (batch size), c (number of color channels), h (image height) and w (image width)
+>
+> `image = cv2.imread(args.i)` - the `imread` method loads an image from the specified file, args.i (the location of the input image)
+>
+> `### TODO: Preprocess the input image` - TODO to preprocess the input image (Tacles later)
+>
+> `inference_network.sync_inference(preprocessed_image)` - (explanis later lessons) it feeds in the above preprocessed_image.  
+>
+> `output = inference_network.extract_output()` - (explanis later lessons) returning object is the output of the inference request
+>
+> `### TODO: Handle the output of the network, based on args.t` - Here is the second TODO. (Tacles later)
+>
+> `output_image = create_output_image(args.t, image, processed_output)` - create_output_image method creates an output image showing the result of inference using args.t (the model type), image (input image), and processed_output (processed output).
+
+For the first TODO, create the variable `preprocessed_image` which assigned the output of `preprocessing` function.
+
+```python
+  ### TODO: Preprocess the input image
+  preprocessed_image = preprocessing(image, h, w)
+```
+
+> `preprocessed_image = preprocessing(image, h, w)` - The `preprocessed_image` variable name comes from the next code  `inference_network.sync_inference(preprocessed_image)`. The `preprocessing` function is defined `handle_models.py`.  
+> The` preprocessing` function takes `image` as a input image (from the privious line `image = cv2.imread(args.i)`), `h` and `w` as image hight and width (from `n, c, h, w = inference_network.load_model(args.m, args.d, args.c)`).
+
+The next TODO is about processing the output of the pre-trained model. Accroding to the Note suggestion, to get the correct function, it uses handle_output function with `args.t` and creates an appropriate output for each models.
+
+```python
+  ### TODO: Handle the output of the network, based on args.t
+  ### Note: This will require using `handle_output` to get the correct
+  ###       function, and then feeding the output to that function.
+  output_function = handle_output(args.t)
+  processed_output = output_function(output, image.shape)
+```
+
+> `output_function = handle_output(args.t)` - `handle_output(args.t)` function with `args.t` (the model type) and assignes the return to `output_function`. handle_output function will be implemented later.
+>
+> `processed_output = output_function(output, image.shape)` - Using `output_function` function with the raw output and shape properties, `image.shape`, it process the output. Your processed_output image will be used on the next line `output_image = create_output_image(args.t, image, processed_output)`.
+
+Now you implemented the `app.py`, now it is time to back `handle_models.py` TODOs.
