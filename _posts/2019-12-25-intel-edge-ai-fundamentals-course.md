@@ -1060,7 +1060,9 @@ Check what is exactly the output type to extract the second blob which contains 
 
 For checking the data type, implement `app.py` first, because the `handle_pose` function calling from `app.py` is much more easier for debugging.
 
-Let's have a close look at the the first part of the `app.py`.
+## app.py
+
+Let's have a close look at the the first part of the `app.py` to understand the basic structure of the code and how should you implement TODOs.
 
 ```python
 import argparse
