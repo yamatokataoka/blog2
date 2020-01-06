@@ -980,7 +980,7 @@ def handle_pose(output, input_shape):
     # TODO 1: Extract only the second blob
     # TODO 2: Resize the heatmap back to the size of the input
 
-    return output
+    return None
 
 
 def handle_text(output, input_shape):
@@ -1053,7 +1053,7 @@ def handle_pose(output, input_shape):
     # TODO 1: Extract only the second blob
     # TODO 2: Resize the heatmap back to the size of the input
 
-    return output
+    return None
 ```
 
 Check what is exactly the output type to extract the second blob which contains keypoint heatmaps.
