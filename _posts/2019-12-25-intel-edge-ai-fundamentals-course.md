@@ -1326,6 +1326,6 @@ The next TODO is about processing the output of the pre-trained model. Accroding
 >
 > `processed_output = output_function(output, image.shape)` - Using `output_function` function with the raw output and shape properties, `image.shape`, it process the output. Your processed_output image will be used on the next line `output_image = create_output_image(args.t, image, processed_output)`.
 
-Now you implemented the `app.py`, now it is time to back `handle_models.py` TODOs.
+Now you implemented the `app.py`, it is time to back `handle_models.py` TODOs.
 
 ## handle_models.py
