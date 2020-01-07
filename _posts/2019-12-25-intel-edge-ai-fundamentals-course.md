@@ -1117,8 +1117,8 @@ The arguments come from when the `app.py` is executed on the command line.
 
 For example, here is `-i`, `-t`, `-m` and `-c` arguments which is handled by `get_args` function and passed to the further functions.
 
-```bash
-python app.py -i "images/blue-car.jpg" -t "CAR_META" -m "/home/workspace/models/vehicle-attributes-recognition-barrier-0039.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+```
+# python app.py -i "images/blue-car.jpg" -t "CAR_META" -m "/home/workspace/models/vehicle-attributes-recognition-barrier-0039.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
 ```
 
 {::options parse_block_html="true" /}
@@ -1354,8 +1354,8 @@ def handle_pose(output, input_shape):
 
 Run
 
-```bash
-python app.py -i "images/sitting-on-car.jpg" -t "POSE" -m "/home/workspace/models/human-pose-estimation-0001.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+```
+# python app.py -i "images/sitting-on-car.jpg" -t "POSE" -m "/home/workspace/models/human-pose-estimation-0001.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
 ```
 
 <details>
