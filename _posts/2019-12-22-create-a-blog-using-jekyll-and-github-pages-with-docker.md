@@ -375,12 +375,14 @@ Enter your site name, description, avatar and many other options by editing the 
 
 comments below all set up will help you configurating.
 
-My final configuration looks like
+My final configuration looks like this:
+
+{::options parse_block_html="true" /}
 
 <details>
-<summary>_config.yml</summary>
+<summary markdown="span">_config.yml</summary>
 
-<pre>
+```
 #
 # This file contains configuration flags to customize your site
 #
@@ -470,8 +472,15 @@ exclude:
   - vendor
   - .jekyll-cache
   - .gitignore
-</pre>
+```
+
+> `avatar: /images/profile.png` - here you can specify the location of image like `/images/profile.png`
+>
+> `baseurl: ""` -  `baseurl` will be blank for User repository.
+
 </details>
+
+{::options parse_block_html="false" /}
 
 ## Fix highlight scss
 Replace .highlight to pre on jekyll-now/_sass/_highlights.scss for fixing bug on Jekyll Now. This bug is reported on the original repository as a [issue](https://github.com/barryclark/jekyll-now/issues/1526).
@@ -486,7 +495,7 @@ Replace .highlight to pre on jekyll-now/_sass/_highlights.scss for fixing bug on
 ```
 
 ## Update highlight scss
-(Ongoing) Here is my `_sass/_highlights.scss`. You may refer this.
+To change github-like code block, Update `_sass/_highlights.scss` provides styling of highlight block.
 
 <details>
 <summary>_sass/_highlights.scss</summary>
