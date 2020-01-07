@@ -1562,3 +1562,205 @@ def handle_pose(output, input_shape):
 
     return None
 ```
+
+For start off TODO 2, print heatmaps' shape to check what contains in it.
+
+<details>
+<summary>code</summary>
+
+<pre>
+def handle_pose(output, input_shape):
+    '''
+    Handles the output of the Pose Estimation model.
+    Returns ONLY the keypoint heatmaps, and not the Part Affinity Fields.
+    '''
+    # TODO 1: Extract only the second blob
+    heatmaps = output['Mconv7_stage2_L2']
+    # TODO 2: Resize the heatmap back to the size of the input
+    print(heatmaps.shape)
+    exit(1)
+
+    return None
+</pre>
+</details>
+
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@4685af7bd898:/home/workspace# python app.py -i "images/sitting-on-car.jpg" -t "POSE" -m "/home/workspace/models/human-pose-estimation-0001.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+(1, 19, 32, 57)
+</pre>
+</details>
+
+The heatmaps ndarray has 4 dimensions, (1, 19, 32, 57) which represents keypoint heatmaps.
+
+You can assume that there are 19 keypoint heatmaps for human pose detection. On the second dimension, 32 and 57 is image height and width, and 1 is batch size that means they return 1 output at a time.
+
+It has a matrix of matrices. 1 is the number of rows of matrices, 19 is the number of columns of matrices, and (32, 57) is the number of rows and columns in the matrix at array[1][19].
+
+{% include helpers/image.html name="keypoint_heatmaps_ndarray.png" %}
+
+Resize it with input image height and width. `input_shape` is from `image.shape` and `image = cv2.imread(args.i)` on app.py. Input image is read as a 3D ndarray of row (height) x column (width) x depth (color).
+
+{::options parse_block_html="true" /}
+
+<details>
+<summary markdown="span">Check input_shape</summary>
+
+__code__
+```python
+def handle_pose(output, input_shape):
+    '''
+    Handles the output of the Pose Estimation model.
+    Returns ONLY the keypoint heatmaps, and not the Part Affinity Fields.
+    '''
+    # TODO 1: Extract only the second blob output (keypoint heatmaps)
+    heatmaps = output['Mconv7_stage2_L2']
+    # TODO 2: Resize the heatmap back to the size of the input
+    print(input_shape)
+    exit(1)
+
+    return None
+```
+
+__log__
+```bash
+(venv) root@e58ff8e15d0f:/home/workspace# python app.py -i "images/sitting-on-car.jpg" -t "POSE" -m "/home/workspace/models/human-pose-estimation-0001.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+(750, 1000, 3)
+(venv) root@e58ff8e15d0f:/home/workspace#
+```
+> (750, 1000, 3) - this is a input shape, 750 pixels height, 1000 pixels width, and 3 represents color picture.
+
+</details>
+
+{::options parse_block_html="false" /}
+<br>
+
+And the return value `processed_output` will be used on `get_mask(processed_output)` and `create_output_image(model_type, image, output)`. You can find that `mask = np.dstack((empty, processed_output, empty))` means 3 dimensional ndarray is needed because `dstack` function makes most sense for arrays with up to 3 dimensions. `output = output[:-1]` and `# Remove final part of output not used for heatmaps` can be infered that the first dimension will be the heatmaps, height and width in order.
+
+> `output = output[:-1]` - extract all elements of the sequence but the last.
+> Reference: [What does [:-1] mean/do in python?](https://stackoverflow.com/questions/15535205/what-does-1-mean-do-in-python)
+
+{::options parse_block_html="true" /}
+
+<details>
+<summary markdown="span">create_output_image And get_mask</summary>
+
+__get_mask(processed_output)__
+```python
+def get_mask(processed_output):
+    '''
+    Given an input image size and processed output for a semantic mask,
+    returns a masks able to be combined with the original image.
+    '''
+    # Create an empty array for other color channels of mask
+    empty = np.zeros(processed_output.shape)
+    # Stack to make a Green mask where text detected
+    mask = np.dstack((empty, processed_output, empty))
+
+    return mask
+```
+
+__create_output_image(model_type, image, output)__
+```python
+def create_output_image(model_type, image, output):
+    '''
+    Using the model type, input image, and processed output,
+    creates an output image showing the result of inference.
+    '''
+    if model_type == "POSE":
+        # Remove final part of output not used for heatmaps
+        output = output[:-1]
+        # Get only pose detections above 0.5 confidence, set to 255
+        for c in range(len(output)):
+            output[c] = np.where(output[c]>0.5, 255, 0)
+        # Sum along the "class" axis
+        output = np.sum(output, axis=0)
+        # Get semantic mask
+        pose_mask = get_mask(output)
+        # Combine with original image
+        image = image + pose_mask
+        return image
+# omitted ...
+```
+
+Here [Futher Reading about Human Pose Estimation](http://docs.openvinotoolkit.org/latest/_demos_human_pose_estimation_demo_README.html) explains the output for pose may contains up to 18 keypoints. So, shouldn't it be 18 instead of 19? That is the reason why it removes final part of output not used for heatmaps.
+
+```python
+# Remove final part of output not used for heatmaps
+output = output[:-1]
+```
+
+{::options parse_block_html="false" /}
+
+The final part of output is about background.
+
+{% include helpers/image.html name="POSE-output-background.png" %}
+
+{::options parse_block_html="true" /}
+
+code
+
+```python
+# Change output[:-1] to output[-1:] to extract only the last element
+output = output[-1:]
+```
+
+</details>
+
+{::options parse_block_html="false" /}
+<br>
+
+Create new ndarray for output using input shape and keypoint heatmaps.
+
+```python
+  # TODO 2: Resize the heatmap back to the size of the input
+  # Create an array of zeros
+  processed_output = np.zeros([heatmaps.shape[1], input_shape[0], input_shape[1]])
+```
+
+Resize each ndarray using for loop.
+
+```python
+  # TODO 2: Resize the heatmap back to the size of the input
+  # Create an array of zeros
+  processed_output = np.zeros([heatmaps.shape[1], input_shape[0], input_shape[1]])
+  # Iterate through and re-size each heatmap
+  for h in range(len(heatmaps[0])):
+     processed_output[h] = cv2.resize(heatmaps[0][h], input_shape[0:2][::-1])
+
+  return processed_output
+```
+
+> `out_heatmap = np.zeros([heatmaps.shape[1], input_shape[0], input_shape[1]])` - numpy function `zeros` returns a new array of given shape and type, filled with zeros. The first parameter, `[heatmaps.shape[1], input_shape[0], input_shape[1]]` list explains shape of the new 3 dimensional ndarray.
+>
+> `for h in range(len(heatmaps[0])):` - This `for` loop is used for iterating over a sequence of numbers (0~18).  The `range()` function returns a sequence of numbers, starting from 0 by default, and increments by 1 (by default), and ends at a specified number (In this case, `len(heatmaps[0])`)
+>
+> `processed_output[h] = cv2.resize(heatmaps[0][h], input_shape[0:2][::-1])` - `cv2.resize` resize each keypoint heatmap (`heatmaps[0][h]`) to specific width and height (`input_shape[0:2][::-1]`). Only `input_shape[0:2]` is not enough for resizing because `resize` function expect (width, height) order.  
+> `[::-1]` reverses `input_shape[0:2]` (750, 1000). It starts from the end, towards the first, taking each element.
+>
+> `return processed_output` - It returns `processed_output` which is trimed and resized.
+
+Now, it's time to run `app.py` for Human Pose Estimation.
+
+```
+# python app.py -i "images/sitting-on-car.jpg" -t "POSE" -m "/home/workspace/models/human-pose-estimation-0001.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+```
+
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@2416e0f303d3:/home/workspace# python app.py -i "images/sitting-on-car.jpg" -t "POSE" -m "/home/workspace/models/human-pose-estimation-0001.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+(venv) root@2416e0f303d3:/home/workspace#
+</pre>
+</details>
+
+It will not show anything but the image should already be available in the outputs folder. You can find a folder icon at the top left corner below the taskbar, and browse the `POSE-output.png` file on the output directory. You can double click or download by right click.
+
+{% include helpers/image.html name="Screen Shot 2020-01-07 at 19.29.41.png" %}
+
+The output of Human Pose Estimation will be:
+
+{% include helpers/image.html name="POSE-output.png" %}
