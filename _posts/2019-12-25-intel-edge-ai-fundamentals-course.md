@@ -1565,10 +1565,12 @@ def handle_pose(output, input_shape):
 
 For start off TODO 2, print heatmaps' shape to check what contains in it.
 
-<details>
-<summary>code</summary>
+{::options parse_block_html="true" /}
 
-<pre>
+<details>
+<summary markdown="span">Code and Log</summary>
+__code__
+```python
 def handle_pose(output, input_shape):
     '''
     Handles the output of the Pose Estimation model.
@@ -1581,17 +1583,16 @@ def handle_pose(output, input_shape):
     exit(1)
 
     return None
-</pre>
-</details>
+```
 
-<details>
-<summary>log</summary>
-
-<pre>
+__log__
+```
 (venv) root@4685af7bd898:/home/workspace# python app.py -i "images/sitting-on-car.jpg" -t "POSE" -m "/home/workspace/models/human-pose-estimation-0001.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
 (1, 19, 32, 57)
-</pre>
+```
 </details>
+
+{::options parse_block_html="false" /}
 
 The heatmaps ndarray has 4 dimensions, (1, 19, 32, 57) which represents keypoint heatmaps.
 
