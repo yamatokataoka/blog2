@@ -1121,6 +1121,14 @@ For example, here is `-i`, `-t`, `-m` and `-c` arguments which is handled by `ge
 # python app.py -i "images/blue-car.jpg" -t "CAR_META" -m "/home/workspace/models/vehicle-attributes-recognition-barrier-0039.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
 ```
 
+> `-i "images/blue-car.jpg"` - The location of the input image
+>
+> `-t "CAR_META"` - The model type, which should be one of "POSE", "TEXT", or "CAR_META"
+>
+> `-m "/home/workspace/models/vehicle-attributes-recognition-barrier-0039.xml"` - The location of the model .xml file
+>
+> `-c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"` -
+
 {::options parse_block_html="true" /}
 
 <details>
