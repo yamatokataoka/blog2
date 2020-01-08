@@ -575,4 +575,36 @@ the final layout looks like this:
 
 {% include helpers/image.html name="Screen Shot 2019-12-29 at 18.15.38.png" %}
 
+## Add details tag style
+
+There is no style on HTML5 `details` tag.
+
+Add style under `_sass/` named like `_details.scss`
+
+```
+details {
+  padding: 1em;
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+}
+```
+
+Add add import statement on the scss file for `_details.scss`.
+
+```
+---
+---
+
+//
+// IMPORTS
+//
+
+@import "reset";
+@import "variables";
+@import "details";
+# omitted ...
+```
+
+Reference: [The Details and Summary HTML Elements](https://alligator.io/html/details-summary-elements/)
+
 # Set up Docker Compose (future)
