@@ -1895,3 +1895,121 @@ Check output image on `outputs` directory.
 This is full output image.
 
 {% include helpers/image.html name="TEXT-output.png" %}
+
+### handle_car
+
+Here is two TODOs on the `handle_car` function. Refer the output information on [outputs section](https://docs.openvinotoolkit.org/latest/_models_intel_vehicle_attributes_recognition_barrier_0039_description_vehicle_attributes_recognition_barrier_0039.html#outputs) of the `vehicle-attributes-recognition-barrier-0039` page.
+
+{::options parse_block_html="true" /}
+
+<details>
+<summary markdown="span">Check class type of output.</summary>
+
+code
+```python
+def handle_car(output, input_shape):
+    '''
+    Handles the output of the Car Metadata model.
+    Returns two integers: the argmax of each softmax output.
+    The first is for color, and the second for type.
+    '''
+    # TODO 1: Get the argmax of the "color" output
+    print(type(output))
+    exit(1)
+    # TODO 2: Get the argmax of the "type" output
+
+    return None
+```
+
+Run
+```
+# python app.py -i "images/blue-car.jpg" -t "CAR_META" -m "/home/workspace/models/vehicle-attributes-recognition-barrier-0039.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+```
+
+log
+```
+(venv) root@de1e9a55d8cd:/home/workspace# python app.py -i "images/blue-car.jpg" -t "CAR_META" -m "/home/workspace/models/vehicle-attributes-recognition-barrier-0039.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+<class 'dict'>
+(venv) root@de1e9a55d8cd:/home/workspace#
+```
+
+You can check keys of this dictionary with `print(output.keys())` as well.
+
+```
+dict_keys(['color', 'type'])
+```
+
+</details>
+
+{::options parse_block_html="false" /}
+
+To make well-processed output, check how the processed output is used on the application.
+
+In the `create_output_image` function, it uses only the first dimension.
+
+```python
+# omitted ...
+    # Get the color and car type from their lists
+        color = CAR_COLORS[output[0]]
+        car_type = CAR_TYPES[output[1]]
+# omitted ...
+```
+
+So it is reasonable to get rid of unnecessary dimensions. The argmax suggests to use argmax function to get the indices of the maximum values.
+
+```python
+def handle_car(output, input_shape):
+    '''
+    Handles the output of the Car Metadata model.
+    Returns two integers: the argmax of each softmax output.
+    The first is for color, and the second for type.
+    '''
+    # TODO 1: Get the argmax of the "color" output
+    # Get rid of unnecessary dimensions
+    output_color = output['color'].flatten()
+
+    argmax_color = np.argmax(output_color)
+
+    # TODO 2: Get the argmax of the "type" output
+    # Get rid of unnecessary dimensions
+    output_type = output['type'].flatten()
+
+    argmax_type = np.argmax(output_type)
+
+    return argmax_color, argmax_type
+```
+
+> `output_color = output['color'].flatten()` -  flatten function flattens `output['color']` to one dimension and assignes it to `output_color` variable.
+>
+> `argmax_color = np.argmax(output_color)` - `argmax` function returns the index of the maximum value on `output_color` array.
+>
+> `output_type = output['type'].flatten()` - almost same above but for car type.
+>
+> `argmax_type = np.argmax(output_type)` - same but output_type array.
+
+Now it is time to run
+
+```
+# python app.py -i "images/blue-car.jpg" -t "CAR_META" -m "/home/workspace/models/vehicle-attributes-recognition-barrier-0039.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+```
+
+> `-i "images/blue-car.jpg"` - example image for testing
+>
+> `-t "CAR_META"` - model type for vehicle-attributes-recognition-barrier-0039
+>
+> `-m "/home/workspace/models/vehicle-attributes-recognition-barrier-0039.xml"` - pre-trained model data
+>
+> `-c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"` - you can ignore for now.
+
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@8ae83e78eaaf:/home/workspace# python app.py -i "images/blue-car.jpg" -t "CAR_META" -m "/home/workspace/models/vehicle-attributes-recognition-barrier-0039.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+(venv) root@8ae83e78eaaf:/home/workspace#
+</pre>
+</details>
+
+On `outputs` folder on your workspace, there should be `CAR_META-output.png`.
+
+{% include helpers/image.html name="CAR_META-output.png" %}
