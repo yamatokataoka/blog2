@@ -1767,3 +1767,131 @@ It will not show anything but the image should already be available in the outpu
 The output of Human Pose Estimation will be:
 
 {% include helpers/image.html name="POSE-output.png" %}
+
+### handle_text
+
+Here is two TODOs on the `handle_text` function. For `TODO 1: Extract only the first blob output`, refer the output information on [outputs section](https://docs.openvinotoolkit.org/latest/_models_intel_text_detection_0004_description_text_detection_0004.html#outputs) of the `text-detection-0004` page.
+
+Check type of output.
+
+code
+```python
+def handle_text(output, input_shape):
+    '''
+    Handles the output of the Text Detection model.
+    Returns ONLY the text/no text classification of each pixel,
+        and not the linkage between pixels and their neighbors.
+    '''
+    # TODO 1: Extract only the first blob output (text/no text classification)
+    print(type(output))
+    exit(1)
+    # TODO 2: Resize this output back to the size of the input
+
+    return None
+```
+
+Run
+```
+# python app.py -i "images/sign.jpg" -t "TEXT" -m "/home/workspace/models/text-detection-0004.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+```
+
+log
+```
+(venv) root@dfaa228ce41f:/home/workspace# python app.py -i "images/sign.jpg" -t "TEXT" -m "/home/workspace/models/text-detection-0004.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+<class 'dict'>
+(venv) root@dfaa228ce41f:/home/workspace#
+```
+
+The class of output is dictionary. Add code for extracting it using the first key, `'model/segm_logits/add'` to variable `first_blob`.
+
+```
+# TODO 1: Extract only the first blob output (text/no text classification)
+first_blob = output['model/segm_logits/add']
+```
+
+For TODO 2, check the first_blob shape to determine resizing.
+
+{::options parse_block_html="true" /}
+
+<details>
+<summary markdown="span">Check the first_blob shape</summary>
+
+```python
+def handle_text(output, input_shape):
+    '''
+    Handles the output of the Text Detection model.
+    Returns ONLY the text/no text classification of each pixel,
+        and not the linkage between pixels and their neighbors.
+    '''
+    # TODO 1: Extract only the first blob output (text/no text classification)
+    first_blob = output['model/segm_logits/add']
+    # TODO 2: Resize this output back to the size of the input
+    print(first_blob.shape)
+    exit(1)
+
+    return None
+```
+
+Run
+```
+# python app.py -i "images/sign.jpg" -t "TEXT" -m "/home/workspace/models/text-detection-0004.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+```
+
+Log
+```
+(venv) root@de1e9a55d8cd:/home/workspace# python app.py -i "images/sign.jpg" -t "TEXT" -m "/home/workspace/models/text-detection-0004.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+(1, 2, 192, 320)
+```
+
+> `(1, 2, 192, 320)` - It supposes 1 (batch size), 2 (text/no-text classification), 192 (output width), 320 (output height)
+
+</details>
+
+{::options parse_block_html="false" /}
+
+For both text/no-text classification, it resizes from (192, 320) output size to the input size.
+
+In the `app.py`, again they use the first dimension of output.
+
+```
+# omitted ...
+    # Get only text detections above 0.5 confidence, set to 255
+    output = np.where(output[1]>0.5, 255, 0)
+# omitted ...
+```
+
+TODO 2's code is the almost same with human-pose-estimation-0001.
+
+```python
+    # TODO 2: Resize this output back to the size of the input
+    # Create an array of zeros
+    processed_output = np.zeros([first_blob.shape[1], input_shape[0], input_shape[1]])
+    # Iterate through and re-size each heatmap
+    for h in range(len(first_blob[0])):
+        processed_output[h] = cv2.resize(first_blob[0][h], input_shape[0:2][::-1])
+
+    return processed_output
+```
+
+Now you can run `app.py` for `text-detection-0004`.
+
+
+```
+# python app.py -i "images/sign.jpg" -t "TEXT" -m "/home/workspace/models/text-detection-0004.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+```
+
+> `-i "images/sign.jpg"` - test image which already provided
+>
+> `-t "TEXT"` - model type for test detection
+>
+> `-m "/home/workspace/models/text-detection-0004.xml"` - model xml file for text-detection-0004
+>
+> `-c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"` - A CPU extension file (optional). You can ignore now.
+
+Check output image on `outputs` directory.
+
+{% include helpers/image.html name="Screen Shot 2020-01-09 at 12.20.37.png" %}
+
+This is full output image.
+
+{% include helpers/image.html name="TEXT-output.png" %}
