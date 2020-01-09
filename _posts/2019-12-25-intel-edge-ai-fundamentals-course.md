@@ -1127,7 +1127,7 @@ For example, here is `-i`, `-t`, `-m` and `-c` arguments which is handled by `ge
 >
 > `-m "/home/workspace/models/vehicle-attributes-recognition-barrier-0039.xml"` - The location of the model .xml file
 >
-> `-c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"` -
+> `-c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"` - A CPU extension file (this is optional). You can ignore now.
 
 {::options parse_block_html="true" /}
 
@@ -1337,6 +1337,8 @@ The next TODO is about processing the output of the pre-trained model. Accroding
 Now you implemented the `app.py`, it is time to back `handle_models.py` TODOs.
 
 ## handle_models.py
+
+### handle_pose function
 
 To determine the data type of output variable, add print function on `handle_pose` function.
 
@@ -1626,7 +1628,7 @@ def handle_pose(output, input_shape):
 ```
 
 __log__
-```bash
+```
 (venv) root@e58ff8e15d0f:/home/workspace# python app.py -i "images/sitting-on-car.jpg" -t "POSE" -m "/home/workspace/models/human-pose-estimation-0001.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
 (750, 1000, 3)
 (venv) root@e58ff8e15d0f:/home/workspace#
