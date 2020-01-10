@@ -99,7 +99,8 @@ First, go to the openvino downloader directory:
 (venv) root@a2c7959d88c3:/home/workspace# cd /opt/intel/openvino/deployment_to
 ols/open_model_zoo/tools/downloader
 (venv) root@a2c7959d88c3:/opt/intel/openvino/deployment_tools/open_model_zoo/t
-ools/downloader# ls -ltotal 292
+ools/downloader# ls -l
+total 292
 -rw-r--r-- 1 root root  17645 Dec  5 23:48 common.py-rwxr-xr-x 1 root root   8263 Dec  5 23:48 converter.py
 -rwxr-xr-x 1 root root  10631 Dec  5 23:48 downloader.py-rwxr-xr-x 1 root root   1954 Dec  5 23:48 info_dumper.py
 -rw-r--r-- 1 root root 213663 Dec  5 23:48 license.txt
@@ -238,7 +239,7 @@ you should see three directories - one for each downloaded model (`human-pose-es
 # ls -l
 ```
 
-> `ls -l` - ls command to lists files and directories within the current directory. With the -l option, ls will list out files and directories in long list format.
+> `ls -l` - `ls` command to lists files and directories within the current directory. With the `-l` option, `ls` will list out files and directories in long list format.
 
 <details>
 <summary>log</summary>
@@ -1945,3 +1946,116 @@ Now it is time to run
 On `outputs` folder on your workspace, there should be `CAR_META-output.png`.
 
 {% include helpers/image.html name="CAR_META-output.png" %}
+
+# Lesson 3: The Model Optimizer
+
+You will do the following things:
+
+- Converting from models in those frameworks to Intermediate Representations
+- And a bit on Custom Layers
+
+## Exercise: Convert a TensorFlow Model
+
+Make sure to click the button below before you get started to source the correct environment.
+
+<details>
+<summary>log</summary>
+
+<pre>
+root@4a89951ac85e:/home/workspace# source /opt/intel/openvino/bin/setupvars.sh -pyver 3.5
+python_version = 3.5
+[setupvars.sh] OpenVINO environment initialized
+(venv) root@4a89951ac85e:/home/workspace#
+</pre>
+</details>
+
+You'll convert a TensorFlow Model from the Object Detection Model Zoo into an Intermediate Representation using the Model Optimizer.
+
+First, you need to download the SSD MobileNet V2 COCO model which is a TensorFlow Model.
+
+```
+# wget http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz
+```
+
+> `wget http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz` - wget is one of the most common a Linux and UNIX command for downloading files from the Internet. In this case, you will download the `ssd_mobilenet_v2_coco_2018_03_29.tar.gz` which is a tar file, a collection of files wrapped up in one single file for easy storage from the url, http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz.
+
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@4a89951ac85e:/home/workspace# wget http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz
+--2020-01-10 12:33:35--  http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz
+Resolving download.tensorflow.org (download.tensorflow.org)... 173.194.193.128, 2607:f8b0:4001:c0f::80
+Connecting to download.tensorflow.org (download.tensorflow.org)|173.194.193.128|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 187925923 (179M) [application/x-tar]
+Saving to: ‘ssd_mobilenet_v2_coco_2018_03_29.tar.gz’
+
+ssd_mobilenet_v2_c 100%[===============>] 179.22M   167MB/s    in 1.1s    
+
+2020-01-10 12:33:37 (167 MB/s) - ‘ssd_mobilenet_v2_coco_2018_03_29.tar.gz’ saved [187925923/187925923]
+
+(venv) root@4a89951ac85e:/home/workspace#
+</pre>
+</details>
+
+You can check the `ssd_mobilenet_v2_coco_2018_03_29.tar.gz` file under `/home/workspace` using `ls` command.
+
+```
+# ls -l
+```
+
+> `ls -l` - `ls` command to lists files and directories within the current directory. With the `-l` option, `ls` will list out files and directories in long list format.
+
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@4a89951ac85e:/home/workspace# ls -l
+total 183788
+-rw-r--r-- 1 root root     68036 Jan 10 11:32 Guide.ipynb
+-rw-r--r-- 1 root root      2135 Dec 12 23:48 README.md
+drwxr-xr-x 2 root root      4096 Dec 12 23:48 solution
+-rw-r--r-- 1 root root 187925923 Apr  2  2018 ssd_mobilenet_v2_coco_2018_03_29.tar.gz
+(venv) root@4a89951ac85e:/home/workspace#
+</pre>
+</details>
+
+Now you can extract the compressed file.
+
+```
+# tar -xvf ssd_mobilenet_v2_coco_2018_03_29.tar.gz
+```
+
+> `tar -xvf ssd_mobilenet_v2_coco_2018_03_29.tar.gz` - `tar` command for handling `**.tar.gz` file.  
+> `x`: Extract a tar file.  
+> `v`: Verbose output or show progress while extracting files.  
+> `f`: Specify an archive or a tar filename. (ssd_mobilenet_v2_coco_2018_03_29.tar.gz)
+
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@4a89951ac85e:/home/workspace# tar -xvf ssd_mobilenet_v2_coco_2018_03_29.tar.gz
+ssd_mobilenet_v2_coco_2018_03_29/checkpoint
+ssd_mobilenet_v2_coco_2018_03_29/model.ckpt.meta
+ssd_mobilenet_v2_coco_2018_03_29/pipeline.config
+ssd_mobilenet_v2_coco_2018_03_29/saved_model/saved_model.pb
+ssd_mobilenet_v2_coco_2018_03_29/frozen_inference_graph.pb
+ssd_mobilenet_v2_coco_2018_03_29/saved_model/
+ssd_mobilenet_v2_coco_2018_03_29/saved_model/variables/
+ssd_mobilenet_v2_coco_2018_03_29/model.ckpt.index
+ssd_mobilenet_v2_coco_2018_03_29/
+ssd_mobilenet_v2_coco_2018_03_29/model.ckpt.data-00000-of-00001
+(venv) root@4a89951ac85e:/home/workspace# ls -l
+total 183792
+-rw-r--r-- 1 root   root      68036 Jan 10 11:32 Guide.ipynb
+-rw-r--r-- 1 root   root       2135 Dec 12 23:48 README.md
+drwxr-xr-x 2 root   root       4096 Dec 12 23:48 solution
+drwxr-xr-x 3 345018 89939      4096 Mar 30  2018 ssd_mobilenet_v2_coco_2018_03_29
+-rw-r--r-- 1 root   root  187925923 Apr  2  2018 ssd_mobilenet_v2_coco_2018_03_29.tar.gz
+(venv) root@4a89951ac85e:/home/workspace#
+</pre>
+</details>
+
+There is an extracted folder, `ssd_mobilenet_v2_coco_2018_03_29`.
