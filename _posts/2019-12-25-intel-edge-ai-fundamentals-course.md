@@ -13,8 +13,15 @@ This is a guide to help you walk through the course and deepen your understandin
 # Goal
 Finish Intel® Edge AI Fundamentals Course sucessfully.
 
-# Leveraging Pre-Trained Models
-## Loading Pre-Trained Models
+# LESSON 2: Leveraging Pre-Trained Models
+
+In this lesson's exercise, you will do the following things:
+
+- Choosing the right Pre-Trained Model for your App
+- Loading and Deploying a Basic App with a Pre-Trained Model
+
+## Leveraging Pre-Trained Models
+### Loading Pre-Trained Models
 The models are available in OpenVINO™ as pre-trained models like:
 
 - Text Detection
@@ -31,7 +38,7 @@ On the [Intel® Edge AI Fundamentals Course](https://www.udacity.com/scholarship
 
 {% include helpers/image.html name="Screen Shot 2019-12-25 at 22.35.27.png" %}
 
-## Find the Right Models
+### Find the Right Models
 
 first, press `SOURCE ENV` button (to source the correct environment).
 
@@ -61,7 +68,7 @@ You obviously find out the correct models, if you goes to the [Pre-Trained Model
 
 {% include helpers/image.html name="Screen Shot 2019-12-26 at 19.28.11.png" %}
 
-## Download the Models
+### Download the Models
 
 Once you have found the right models, download them into the workspace with the precision levels:
 
@@ -207,7 +214,7 @@ For Determining Car Type & Color: INT8 only:
 </pre>
 </details>
 
-## Verify the Downloads
+### Verify the Downloads
 
 To verify the download of these models by navigating to `/home/workspace/intel`.
 
@@ -288,7 +295,7 @@ Within those directories, there should be separate subdirectories for the precis
 </pre>
 </details>
 
-# Preprocessing Inputs
+## Preprocessing Inputs
 
 Make sure to click the button below before you get started to source the correct environment.
 
@@ -340,7 +347,7 @@ root@2a5542b94277:/home/workspace/models#
 </pre>
 </details>
 
-## Human Pose Estimation
+### Human Pose Estimation
 
 This section explains all concepts we faces so it little bit longer but the robust understnading of those commands and code will empower you to go through the rest of the exercise with fulfilment feeling.
 
@@ -720,7 +727,7 @@ def pose_estimation(input_image):
     return preprocessed_image
 ```
 
-## Text Detection
+### Text Detection
 
 In the same way, check the [input section](http://docs.openvinotoolkit.org/latest/_models_intel_text_detection_0004_description_text_detection_0004.html#inputs) of the `text-detection-0004` model to make sure what is input expectation.
 
@@ -785,7 +792,7 @@ root@5b564e118360:/home/workspace#
 
 As you can see, the Text Detection test are passed. pre-processing are done for `text-detection-0004`.
 
-## Determining Car Type & Color
+### Determining Car Type & Color
 
 As the same manner to the above two models, check the [input section](https://docs.openvinotoolkit.org/latest/_models_intel_vehicle_attributes_recognition_barrier_0039_description_vehicle_attributes_recognition_barrier_0039.html#inputs) of the `text-detection-0004` model to make sure what is input expectation.
 
@@ -831,7 +838,7 @@ root@5b564e118360:/home/workspace#
 
 It passed all tests and is done pre-processing for all three models, `human-pose-estimation-0001`, `text-detection-0004`, and `vehicle-attributes-recognition-barrier-0039`.
 
-## Solution: Pre-processing Inputs
+### Solution: Pre-processing Inputs
 
  For each model, we ended up noticing they needed essentially the same preprocessing, outside of the height and width of the input to the network.
 
@@ -936,7 +943,7 @@ Congratulations!
 
 It is still working with nicer way.
 
-# Deploy Your First Edge App
+## Deploy Your First Edge App
 
 Make sure to click the button, `SOURCE ENV` before you get started to source the correct environment.
 
@@ -957,7 +964,7 @@ We don't touch the code about the Model Optimizer now.
 
 You will work out of the `handle_models.py` file, as well as adding functions calls within the edge app in `app.py`.
 
-## TODOs
+### TODOs
 
 You will implement the handling of the outputs of our three models on `handle_models.py`.
 
@@ -1060,7 +1067,7 @@ We want to check what is exactly the output type to extract the second blob whic
 
 For checking the data type, implement `app.py` first, because the `handle_pose` function calling from `app.py` is much more easier for debugging.
 
-## app.py
+### app.py
 
 Let's have a closer look at the the first part of the `app.py` to understand the basic structure of the code and how do we implement it.
 
@@ -1376,9 +1383,9 @@ Add try and except clause
 
 {::options parse_block_html="false" /}
 
-## handle_models.py
+### handle_models.py
 
-### handle_pose function
+#### handle_pose function
 
 To check the data type of output, add print function on `handle_pose` function.
 
@@ -1680,7 +1687,7 @@ The output of Human Pose Estimation will be:
 
 {% include helpers/image.html name="POSE-output.png" %}
 
-### handle_text
+#### handle_text
 
 Here is two TODOs on the `handle_text` function. For `TODO 1: Extract only the first blob output`, refer the output information on [outputs section](https://docs.openvinotoolkit.org/latest/_models_intel_text_detection_0004_description_text_detection_0004.html#outputs) of the `text-detection-0004` page.
 
@@ -1819,7 +1826,7 @@ This is full output image.
 
 {% include helpers/image.html name="TEXT-output.png" %}
 
-### handle_car
+#### handle_car
 
 Here is two TODOs on the `handle_car` function. Refer the output information on [outputs section](https://docs.openvinotoolkit.org/latest/_models_intel_vehicle_attributes_recognition_barrier_0039_description_vehicle_attributes_recognition_barrier_0039.html#outputs) of the `vehicle-attributes-recognition-barrier-0039` page.
 
