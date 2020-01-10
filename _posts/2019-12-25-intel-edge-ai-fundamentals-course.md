@@ -857,7 +857,7 @@ It passed all tests and is done pre-processing for all three models, `human-pose
 Now you can replace the dupricated three-line codes on each preprocessing functions
 
 <details>
-<summary>The Solution Code</summary>
+<summary>The Solution code</summary>
 
 <pre>
 import cv2
@@ -963,7 +963,7 @@ You will implement the handling of the outputs of our three models on `handle_mo
 
 Notice that there are two TODOs for each handle function to determine the each output on the first three functions.
 
-The 4th function, named `handle_output` is the function returns one of the above three functions to handle an output, based on the `model_type` being used.
+The 4th function, named `handle_output` is the helper function returns one of the above three functions to handle an output, based on the `model_type`.
 
 The last one is `preprocessing` function you wrote on the previous exercise.
 
@@ -1056,13 +1056,13 @@ def handle_pose(output, input_shape):
     return None
 ```
 
-Check what is exactly the output type to extract the second blob which contains keypoint heatmaps.
+We want to check what is exactly the output type to extract the second blob which contains keypoint heatmaps.
 
 For checking the data type, implement `app.py` first, because the `handle_pose` function calling from `app.py` is much more easier for debugging.
 
 ## app.py
 
-Let's have a close look at the the first part of the `app.py` to understand the basic structure of the code and how should you implement TODOs.
+Let's have a closer look at the the first part of the `app.py` to understand the basic structure of the code and how do we implement it.
 
 ```python
 import argparse
@@ -1310,7 +1310,7 @@ def perform_inference(args):
 >
 > `output_image = create_output_image(args.t, image, processed_output)` - create_output_image method creates an output image showing the result of inference using args.t (the model type), image (input image), and processed_output (processed output).
 
-For the first TODO, create the variable `preprocessed_image` which assigned the output of `preprocessing` function.
+For the first TODO, the output of `preprocessing` function assignes the variable `preprocessed_image`.
 
 ```python
   ### TODO: Preprocess the input image
@@ -1318,9 +1318,9 @@ For the first TODO, create the variable `preprocessed_image` which assigned the 
 ```
 
 > `preprocessed_image = preprocessing(image, h, w)` - The `preprocessed_image` variable name comes from the next code  `inference_network.sync_inference(preprocessed_image)`. The `preprocessing` function is defined `handle_models.py`.  
-> The` preprocessing` function takes `image` as a input image (from the privious line `image = cv2.imread(args.i)`), `h` and `w` as image hight and width (from `n, c, h, w = inference_network.load_model(args.m, args.d, args.c)`).
+> The` preprocessing` function takes `image` as a input image (from the privious line `image = cv2.imread(args.i)`) with image hight and width, `h` and `w` (`n, c, h, w = inference_network.load_model(args.m, args.d, args.c)` function actually returned).
 
-The next TODO is about processing the output of the pre-trained model. Accroding to the Note suggestion, to get the correct function, it uses handle_output function with `args.t` and creates an appropriate output for each models.
+The next TODO is about processing the output of the pre-trained model. Accroding to the Note suggestion, it uses handle_output function which returns the correct output handling function by feeding in the model type, `args.t`. The second line sends the output of inference and image shape to `output_function`.
 
 ```python
   ### TODO: Handle the output of the network, based on args.t
@@ -1336,11 +1336,51 @@ The next TODO is about processing the output of the pre-trained model. Accroding
 
 Now you implemented the `app.py`, it is time to back `handle_models.py` TODOs.
 
+{::options parse_block_html="true" /}
+
+<details>
+<summary markdown="span">Try and Except from Solution</summary>
+
+For handling exceptions, you can use `try` and `except` statements.
+
+The main part in this exercise is creating `processed_output` value using `handle_output` and each model output handle functions on `handle_models.py`.
+
+If you mistake anywhere in the `handle_models.py`, the next line, `output_image = create_output_image(args.t, image, processed_output)` will fail. So the line is the best place to handle exceptions and return feedback to you.
+
+```
+    ### TODO: Handle the output of the network, based on args.t
+    ### Note: This will require using `handle_output` to get the correct
+    ###       function, and then feeding the output to that function.
+    output_function = handle_output(args.t)
+    processed_output = output_function(output, image.shape)
+```
+
+Add try and except clause
+
+```
+    # Create an output image based on network
+    try:
+        output_image = create_output_image(args.t, image, processed_output)
+        print('Success!')
+    except:
+        output_image = image
+        print('Error!')
+```
+
+> `try:` -  this block is executed first. If no exception occurs, the except clause is skipped and execution of the try statement is finished. (print "Error!")
+>
+> `except:` - If an exception occurs during execution of the try clause, the rest of the clause is skipped. Then this except clause is executed. (print "Success!")
+> Reference: [8. Errors and Exceptions](https://docs.python.org/3/tutorial/errors.html)
+
+</details>
+
+{::options parse_block_html="false" /}
+
 ## handle_models.py
 
 ### handle_pose function
 
-To determine the data type of output variable, add print function on `handle_pose` function.
+To check the data type of output, add print function on `handle_pose` function.
 
 ```python
 def handle_pose(output, input_shape):
@@ -1350,14 +1390,13 @@ def handle_pose(output, input_shape):
     '''
     # TODO 1: Extract only the second blob
     print(type(output))
-    print(output)
     exit(1)
     # TODO 2: Resize the heatmap back to the size of the input
 
     return None
 ```
 
-> `print(output)` - shows what output exactly looks like
+> `print(type(output))` - prints what type that outputs on the console
 >
 > `exit(1)` - This causes the program to exit with some issue / error / problem and that is why the program is exiting (here, for debugging purpose)  
 > Reference: [Difference between exit(0) and exit(1) in Python](https://stackoverflow.com/questions/9426045/difference-between-exit0-and-exit1-in-python)
@@ -1374,181 +1413,47 @@ Run
 <pre>
 python app.py -i "images/sitting-on-car.jpg" -t "POSE" -m "/home/workspace/models/human-pose-estimation-0001.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
 <class 'dict'>
-{'Mconv7_stage2_L1': array([[[[ 9.91225243e-05,  9.91225243e-05,  9.91225243e-05, ...,
-           9.91225243e-05,  9.91225243e-05,  9.91225243e-05],
-         [ 9.91225243e-05,  9.91225243e-05,  9.91225243e-05, ...,
-           9.91225243e-05,  9.91225243e-05,  9.91225243e-05],
-         [ 9.91225243e-05,  9.91225243e-05,  9.91225243e-05, ...,
-           9.91225243e-05,  9.91225243e-05,  9.91225243e-05],
-         ...,
-         [ 9.91225243e-05,  9.91225243e-05,  9.91225243e-05, ...,
-           9.91225243e-05,  9.91225243e-05,  9.91225243e-05],
-         [ 9.91225243e-05,  3.55301090e-05,  2.92491641e-05, ...,
-           9.91225243e-05,  1.17282048e-04,  9.91225243e-05],
-         [ 9.91225243e-05,  9.91225243e-05,  9.91225243e-05, ...,
-           9.91225243e-05,  9.91225243e-05,  9.91225243e-05]],
-
-        [[ 4.51803207e-04,  4.51803207e-04,  4.51803207e-04, ...,
-           4.51803207e-04,  4.51803207e-04,  4.51803207e-04],
-         [ 4.51803207e-04,  4.51803207e-04,  4.51803207e-04, ...,
-           4.51803207e-04,  4.51803207e-04,  4.51803207e-04],
-         [ 4.51803207e-04,  4.51803207e-04,  4.51803207e-04, ...,
-           4.51803207e-04,  4.51803207e-04,  4.51803207e-04],
-         ...,
-         [ 4.51803207e-04,  4.51803207e-04,  4.51803207e-04, ...,
-           4.51803207e-04,  4.51803207e-04,  4.51803207e-04],
-         [ 4.51803207e-04,  6.91300433e-04,  7.14955269e-04, ...,
-           4.51803207e-04,  4.77928988e-04,  4.51803207e-04],
-         [ 4.51803207e-04,  4.51803207e-04,  4.51803207e-04, ...,
-           4.51803207e-04,  4.51803207e-04,  4.51803207e-04]],
-
-        [[-6.87241554e-05, -6.87241554e-05, -6.87241554e-05, ...,
-          -6.87241554e-05, -6.87241554e-05, -6.87241554e-05],
-         [-6.87241554e-05, -6.87241554e-05, -6.87241554e-05, ...,
-          -6.87241554e-05, -6.87241554e-05, -6.87241554e-05],
-         [-6.87241554e-05, -6.87241554e-05, -6.87241554e-05, ...,
-          -6.87241554e-05, -6.87241554e-05, -6.87241554e-05],
-         ...,
-         [-6.87241554e-05, -6.87241554e-05, -6.87241554e-05, ...,
-          -6.87241554e-05, -6.87241554e-05, -6.87241554e-05],
-         [-6.87241554e-05, -1.97511617e-04, -2.10231796e-04, ...,
-          -6.87241554e-05, -7.36518268e-05, -6.87241554e-05],
-         [-6.87241554e-05, -6.87241554e-05, -6.87241554e-05, ...,
-          -6.87241554e-05, -6.87241554e-05, -6.87241554e-05]],
-
-        ...,
-
-        [[ 1.13248825e-05,  1.13248825e-05,  1.13248825e-05, ...,
-           1.13248825e-05,  1.13248825e-05,  1.13248825e-05],
-         [ 1.13248825e-05,  1.13248825e-05,  1.13248825e-05, ...,
-           1.13248825e-05,  1.13248825e-05,  1.13248825e-05],
-         [ 1.13248825e-05,  1.13248825e-05,  1.13248825e-05, ...,
-           1.13248825e-05,  1.13248825e-05,  1.13248825e-05],
-         ...,
-         [ 1.13248825e-05,  1.13248825e-05,  1.13248825e-05, ...,
-           1.13248825e-05,  1.13248825e-05,  1.13248825e-05],
-         [ 1.13248825e-05,  3.39860926e-05,  3.62243118e-05, ...,
-           1.13248825e-05,  3.07031696e-05,  1.13248825e-05],
-         [ 1.13248825e-05,  1.13248825e-05,  1.13248825e-05, ...,
-           1.13248825e-05,  1.13248825e-05,  1.13248825e-05]],
-
-        [[ 1.89542770e-04,  1.89542770e-04,  1.89542770e-04, ...,
-           1.89542770e-04,  1.89542770e-04,  1.89542770e-04],
-         [ 1.89542770e-04,  1.89542770e-04,  1.89542770e-04, ...,
-           1.89542770e-04,  1.89542770e-04,  1.89542770e-04],
-         [ 1.89542770e-04,  1.89542770e-04,  1.89542770e-04, ...,
-           1.89542770e-04,  1.89542770e-04,  1.89542770e-04],
-         ...,
-         [ 1.89542770e-04,  1.89542770e-04,  1.89542770e-04, ...,
-           1.89542770e-04,  1.89542770e-04,  1.89542770e-04],
-         [ 1.89542770e-04,  5.54771675e-03,  6.07693661e-03, ...,
-           1.89542770e-04,  2.45439820e-03,  1.89542770e-04],
-         [ 1.89542770e-04,  1.89542770e-04,  1.89542770e-04, ...,
-           1.89542770e-04,  1.89542770e-04,  1.89542770e-04]],
-
-        [[ 6.02006912e-05,  6.02006912e-05,  6.02006912e-05, ...,
-           6.02006912e-05,  6.02006912e-05,  6.02006912e-05],
-         [ 6.02006912e-05,  6.02006912e-05,  6.02006912e-05, ...,
-           6.02006912e-05,  6.02006912e-05,  6.02006912e-05],
-         [ 6.02006912e-05,  6.02006912e-05,  6.02006912e-05, ...,
-           6.02006912e-05,  6.02006912e-05,  6.02006912e-05],
-         ...,
-         [ 6.02006912e-05,  6.02006912e-05,  6.02006912e-05, ...,
-           6.02006912e-05,  6.02006912e-05,  6.02006912e-05],
-         [ 6.02006912e-05,  1.48590165e-03,  1.62671634e-03, ...,
-           6.02006912e-05,  1.74785126e-03,  6.02006912e-05],
-         [ 6.02006912e-05,  6.02006912e-05,  6.02006912e-05, ...,
-           6.02006912e-05,  6.02006912e-05,  6.02006912e-05]]]],
-      dtype=float32), 'Mconv7_stage2_L2': array([[[[3.0350685e-04, 3.0350685e-04, 3.0350685e-04, ...,
-          3.0350685e-04, 3.0350685e-04, 3.0350685e-04],
-         [3.0350685e-04, 3.0350685e-04, 3.0350685e-04, ...,
-          3.0350685e-04, 3.0350685e-04, 3.0350685e-04],
-         [3.0089059e-04, 3.0350685e-04, 3.0350685e-04, ...,
-          3.0350685e-04, 3.0350685e-04, 3.0350685e-04],
-         ...,
-         [3.0350685e-04, 3.0350685e-04, 3.0350685e-04, ...,
-          3.0350685e-04, 3.0350685e-04, 3.0350685e-04],
-         [3.0350685e-04, 3.0350685e-04, 3.0350685e-04, ...,
-          3.0350685e-04, 3.0350685e-04, 3.0350685e-04],
-         [3.0350685e-04, 3.0350685e-04, 3.0350685e-04, ...,
-          3.0350685e-04, 3.0350685e-04, 3.0350685e-04]],
-
-        [[2.3210049e-04, 2.3210049e-04, 2.3210049e-04, ...,
-          2.3210049e-04, 2.3210049e-04, 2.3210049e-04],
-         [2.3210049e-04, 2.3210049e-04, 2.3210049e-04, ...,
-          2.3210049e-04, 2.3210049e-04, 2.3210049e-04],
-         [2.3025085e-04, 2.3210049e-04, 2.3210049e-04, ...,
-          2.3210049e-04, 2.3210049e-04, 2.3210049e-04],
-         ...,
-         [2.3210049e-04, 2.3210049e-04, 2.3210049e-04, ...,
-          2.3210049e-04, 2.3210049e-04, 2.3210049e-04],
-         [2.3210049e-04, 2.3210049e-04, 2.3210049e-04, ...,
-          2.3210049e-04, 2.3210049e-04, 2.3210049e-04],
-         [2.3210049e-04, 2.3210049e-04, 2.3210049e-04, ...,
-          2.3210049e-04, 2.3210049e-04, 2.3210049e-04]],
-
-        [[1.2767315e-04, 1.2767315e-04, 1.2767315e-04, ...,
-          1.2767315e-04, 1.2767315e-04, 1.2767315e-04],
-         [1.2767315e-04, 1.2767315e-04, 1.2767315e-04, ...,
-          1.2767315e-04, 1.2767315e-04, 1.2767315e-04],
-         [1.3214024e-04, 1.2767315e-04, 1.2767315e-04, ...,
-          1.2767315e-04, 1.2767315e-04, 1.2767315e-04],
-         ...,
-         [1.2767315e-04, 1.2767315e-04, 1.2767315e-04, ...,
-          1.2767315e-04, 1.2767315e-04, 1.2767315e-04],
-         [1.2767315e-04, 1.2767315e-04, 1.2767315e-04, ...,
-          1.2767315e-04, 1.2767315e-04, 1.2767315e-04],
-         [1.2767315e-04, 1.2767315e-04, 1.2767315e-04, ...,
-          1.2767315e-04, 1.2767315e-04, 1.2767315e-04]],
-
-        ...,
-
-        [[2.0647049e-04, 2.0647049e-04, 2.0647049e-04, ...,
-          2.0647049e-04, 2.0647049e-04, 2.0647049e-04],
-         [2.0647049e-04, 2.0647049e-04, 2.0647049e-04, ...,
-          2.0647049e-04, 2.0647049e-04, 2.0647049e-04],
-         [2.0639907e-04, 2.0647049e-04, 2.0647049e-04, ...,
-          2.0647049e-04, 2.0647049e-04, 2.0647049e-04],
-         ...,
-         [2.0647049e-04, 2.0647049e-04, 2.0647049e-04, ...,
-          2.0647049e-04, 2.0647049e-04, 2.0647049e-04],
-         [2.0647049e-04, 2.0647049e-04, 2.0647049e-04, ...,
-          2.0647049e-04, 2.0647049e-04, 2.0647049e-04],
-         [2.0647049e-04, 2.0647049e-04, 2.0647049e-04, ...,
-          2.0647049e-04, 2.0647049e-04, 2.0647049e-04]],
-
-        [[3.7479401e-04, 3.7479401e-04, 3.7479401e-04, ...,
-          3.7479401e-04, 3.7479401e-04, 3.7479401e-04],
-         [3.7479401e-04, 3.7479401e-04, 3.7479401e-04, ...,
-          3.7479401e-04, 3.7479401e-04, 3.7479401e-04],
-         [3.7195973e-04, 3.7479401e-04, 3.7479401e-04, ...,
-          3.7479401e-04, 3.7479401e-04, 3.7479401e-04],
-         ...,
-         [3.7479401e-04, 3.7479401e-04, 3.7479401e-04, ...,
-          3.7479401e-04, 3.7479401e-04, 3.7479401e-04],
-         [3.7479401e-04, 3.7479401e-04, 3.7479401e-04, ...,
-          3.7479401e-04, 3.7479401e-04, 3.7479401e-04],
-         [3.7479401e-04, 3.7479401e-04, 3.7479401e-04, ...,
-          3.7479401e-04, 3.7479401e-04, 3.7479401e-04]],
-
-        [[9.9804688e-01, 9.9804688e-01, 9.9804688e-01, ...,
-          9.9804688e-01, 9.9804688e-01, 9.9804688e-01],
-         [9.9804688e-01, 9.9804688e-01, 9.9804688e-01, ...,
-          9.9804688e-01, 9.9804688e-01, 9.9804688e-01],
-         [9.9792606e-01, 9.9804688e-01, 9.9804688e-01, ...,
-          9.9804688e-01, 9.9804688e-01, 9.9804688e-01],
-         ...,
-         [9.9804688e-01, 9.9804688e-01, 9.9804688e-01, ...,
-          9.9804688e-01, 9.9804688e-01, 9.9804688e-01],
-         [9.9804688e-01, 9.9804688e-01, 9.9804688e-01, ...,
-          9.9804688e-01, 9.9804688e-01, 9.9804688e-01],
-         [9.9804688e-01, 9.9804688e-01, 9.9804688e-01, ...,
-          9.9804688e-01, 9.9804688e-01, 9.9804688e-01]]]], dtype=float32)}
 (venv) root@d35e24cf5494:/home/workspace#
 </pre>
 </details>
 
-The output is dictionary which has `Mconv7_stage2_L1` and `Mconv7_stage2_L2` keys (`print(output.keys()` prints only keys on the dictionary)
+The output is dictionary which has `Mconv7_stage2_L1` and `Mconv7_stage2_L2` keys (`print(output.keys())` prints only keys on the dictionary)
+
+{::options parse_block_html="true" /}
+
+<details>
+<summary markdown="span">Check keys on dictionary</summary>
+
+code
+```python
+def handle_pose(output, input_shape):
+    '''
+    Handles the output of the Pose Estimation model.
+    Returns ONLY the keypoint heatmaps, and not the Part Affinity Fields.
+    '''
+    # TODO 1: Extract only the second blob
+    print(output.keys())
+    exit(1)
+    # TODO 2: Resize the heatmap back to the size of the input
+
+    return None
+```
+
+Run
+```
+# python app.py -i "images/sitting-on-car.jpg" -t "POSE" -m "/home/workspace/models/human-pose-estimation-0001.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+```
+
+log
+```
+(venv) root@332ffbba3402:/home/workspace# python app.py -i "images/sitting-on-car.jpg" -t "POSE" -m "/home/workspace/models/human-pose-estimation-0001.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+dict_keys(['Mconv7_stage2_L2', 'Mconv7_stage2_L1'])
+(venv) root@332ffbba3402:/home/workspace#
+```
+
+</details>
+
+{::options parse_block_html="false" /}
 
 To Extract only the second blob, `Mconv7_stage2_L2`, add
 
@@ -1565,13 +1470,15 @@ def handle_pose(output, input_shape):
     return None
 ```
 
-For start off TODO 2, print heatmaps' shape to check what contains in it.
+To start off TODO 2, print heatmaps' shape to check what contains in it.
 
 {::options parse_block_html="true" /}
 
 <details>
-<summary markdown="span">Code and Log</summary>
-__code__
+<summary markdown="span">code and log</summary>
+
+code
+
 ```python
 def handle_pose(output, input_shape):
     '''
@@ -1587,7 +1494,8 @@ def handle_pose(output, input_shape):
     return None
 ```
 
-__log__
+log
+
 ```
 (venv) root@4685af7bd898:/home/workspace# python app.py -i "images/sitting-on-car.jpg" -t "POSE" -m "/home/workspace/models/human-pose-estimation-0001.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
 (1, 19, 32, 57)
@@ -1611,7 +1519,8 @@ Resize it with input image height and width. `input_shape` is from `image.shape`
 <details>
 <summary markdown="span">Check input_shape</summary>
 
-__code__
+code
+
 ```python
 def handle_pose(output, input_shape):
     '''
@@ -1627,7 +1536,8 @@ def handle_pose(output, input_shape):
     return None
 ```
 
-__log__
+log
+
 ```
 (venv) root@e58ff8e15d0f:/home/workspace# python app.py -i "images/sitting-on-car.jpg" -t "POSE" -m "/home/workspace/models/human-pose-estimation-0001.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
 (750, 1000, 3)
@@ -1650,7 +1560,8 @@ And the return value `processed_output` will be used on `get_mask(processed_outp
 <details>
 <summary markdown="span">create_output_image And get_mask</summary>
 
-__get_mask(processed_output)__
+get_mask(processed_output)
+
 ```python
 def get_mask(processed_output):
     '''
@@ -1665,7 +1576,8 @@ def get_mask(processed_output):
     return mask
 ```
 
-__create_output_image(model_type, image, output)__
+create_output_image(model_type, image, output)
+
 ```python
 def create_output_image(model_type, image, output):
     '''
@@ -1723,7 +1635,7 @@ Create new ndarray for output using input shape and keypoint heatmaps.
   processed_output = np.zeros([heatmaps.shape[1], input_shape[0], input_shape[1]])
 ```
 
-Resize each ndarray using for loop.
+Resize each ndarray using for loop. `cv2.resize` function only takes dimensions of 1 or 3 for the channels which is usually color or grayscale image. In our case, there is 19 of these layers.
 
 ```python
   # TODO 2: Resize the heatmap back to the size of the input
@@ -1740,7 +1652,7 @@ Resize each ndarray using for loop.
 >
 > `for h in range(len(heatmaps[0])):` - This `for` loop is used for iterating over a sequence of numbers (0~18).  The `range()` function returns a sequence of numbers, starting from 0 by default, and increments by 1 (by default), and ends at a specified number (In this case, `len(heatmaps[0])`)
 >
-> `processed_output[h] = cv2.resize(heatmaps[0][h], input_shape[0:2][::-1])` - `cv2.resize` resize each keypoint heatmap (`heatmaps[0][h]`) to specific width and height (`input_shape[0:2][::-1]`). Only `input_shape[0:2]` is not enough for resizing because `resize` function expect (width, height) order.  
+> `processed_output[h] = cv2.resize(heatmaps[0][h], input_shape[0:2][::-1])` - `cv2.resize` resize each keypoint heatmap (`heatmaps[0][h]`) to specific width and height (`input_shape[0:2][::-1]`). the `input_shape[0:2][::-1]` line is taking the original image shape of HxWxC, taking just the first two (HxW), and reversing them to be WxH.
 > `[::-1]` reverses `input_shape[0:2]` (750, 1000). It starts from the end, towards the first, taking each element.
 >
 > `return processed_output` - It returns `processed_output` which is trimed and resized.
@@ -1772,9 +1684,15 @@ The output of Human Pose Estimation will be:
 
 Here is two TODOs on the `handle_text` function. For `TODO 1: Extract only the first blob output`, refer the output information on [outputs section](https://docs.openvinotoolkit.org/latest/_models_intel_text_detection_0004_description_text_detection_0004.html#outputs) of the `text-detection-0004` page.
 
-Check type of output.
+It is a similar approch, first, check type of output.
+
+{::options parse_block_html="true" /}
+
+<details>
+<summary markdown="span">check Type of output</summary>
 
 code
+
 ```python
 def handle_text(output, input_shape):
     '''
@@ -1791,16 +1709,22 @@ def handle_text(output, input_shape):
 ```
 
 Run
+
 ```
 # python app.py -i "images/sign.jpg" -t "TEXT" -m "/home/workspace/models/text-detection-0004.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
 ```
 
 log
+
 ```
 (venv) root@dfaa228ce41f:/home/workspace# python app.py -i "images/sign.jpg" -t "TEXT" -m "/home/workspace/models/text-detection-0004.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
 <class 'dict'>
 (venv) root@dfaa228ce41f:/home/workspace#
 ```
+
+</details>
+
+{::options parse_block_html="false" /}
 
 The class of output is dictionary. Add code for extracting it using the first key, `'model/segm_logits/add'` to variable `first_blob`.
 
@@ -1809,7 +1733,7 @@ The class of output is dictionary. Add code for extracting it using the first ke
 first_blob = output['model/segm_logits/add']
 ```
 
-For TODO 2, check the first_blob shape to determine resizing.
+For TODO 2, check the `first_blob` shape to determine resizing.
 
 {::options parse_block_html="true" /}
 
@@ -1837,7 +1761,7 @@ Run
 # python app.py -i "images/sign.jpg" -t "TEXT" -m "/home/workspace/models/text-detection-0004.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
 ```
 
-Log
+log
 ```
 (venv) root@de1e9a55d8cd:/home/workspace# python app.py -i "images/sign.jpg" -t "TEXT" -m "/home/workspace/models/text-detection-0004.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
 (1, 2, 192, 320)
@@ -1874,7 +1798,6 @@ TODO 2's code is the almost same with human-pose-estimation-0001.
 ```
 
 Now you can run `app.py` for `text-detection-0004`.
-
 
 ```
 # python app.py -i "images/sign.jpg" -t "TEXT" -m "/home/workspace/models/text-detection-0004.xml" -c "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
@@ -1933,10 +1856,12 @@ log
 (venv) root@de1e9a55d8cd:/home/workspace#
 ```
 
-You can check keys of this dictionary with `print(output.keys())` as well.
+You can check keys of this dictionary with `print(output.keys())` and each shape using `print(output['color'])` and `print(output['type'])`. That should match what we saw on the [documentation](https://docs.openvinotoolkit.org/latest/_models_intel_vehicle_attributes_recognition_barrier_0039_description_vehicle_attributes_recognition_barrier_0039.html#outputs).
 
 ```
 dict_keys(['color', 'type'])
+(1, 7, 1, 1)
+(1, 4, 1, 1)
 ```
 
 </details>
@@ -1981,7 +1906,7 @@ def handle_car(output, input_shape):
 
 > `output_color = output['color'].flatten()` -  flatten function flattens `output['color']` to one dimension and assignes it to `output_color` variable.
 >
-> `argmax_color = np.argmax(output_color)` - `argmax` function returns the index of the maximum value on `output_color` array.
+> `argmax_color = np.argmax(output_color)` - `argmax` function returns the index where the highest probability on `output_color` array.
 >
 > `output_type = output['type'].flatten()` - almost same above but for car type.
 >
