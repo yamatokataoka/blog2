@@ -2059,3 +2059,151 @@ drwxr-xr-x 3 345018 89939      4096 Mar 30  2018 ssd_mobilenet_v2_coco_2018_03_2
 </details>
 
 There is an extracted folder, `ssd_mobilenet_v2_coco_2018_03_29`.
+
+```
+# cd ssd_mobilenet_v2_coco_2018_03_29
+```
+
+> `cd` - command changes directories
+
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@7fca492ef91a:/home/workspace# cd ssd_mobilenet_v2_coco_2018_03_29
+(venv) root@7fca492ef91a:/home/workspace/ssd_mobilenet_v2_coco_2018_03_29# ls -l
+total 137576
+-rw-r--r-- 1 345018 89939       77 Mar 30  2018 checkpoint
+-rw-r--r-- 1 345018 89939 69688296 Mar 30  2018 frozen_inference_graph.pb
+-rw-r--r-- 1 345018 89939 67505156 Mar 30  2018 model.ckpt.data-00000-of-00001
+-rw-r--r-- 1 345018 89939    15069 Mar 30  2018 model.ckpt.index
+-rw-r--r-- 1 345018 89939  3496023 Mar 30  2018 model.ckpt.meta
+-rw-r--r-- 1 345018 89939     4204 Mar 30  2018 pipeline.config
+drwxr-xr-x 3 345018 89939     4096 Mar 30  2018 saved_model
+(venv) root@7fca492ef91a:/home/workspace/ssd_mobilenet_v2_coco_2018_03_29#
+</pre>
+</details>
+
+In TensorFlow, the `.pb` file contains the graph definition as well as the weights of the model. Thus, a pb file is all you need to be able to run a given trained model.
+
+It's time to convert the TensorFlow model to produce an optimized Intermediate Representation (IR) of the model based on the trained network topology, weights, and biases values.
+
+Use the `mo_tf.py` script to simply convert a model with the path to the input model `.pb` file. Also there is a little note about `--reverse_input_channels` in [Converting a TensorFlow* Model](https://docs.openvinotoolkit.org/latest/_docs_MO_DG_prepare_model_convert_model_Convert_Model_From_TensorFlow.html#Convert_From_TF).
+
+> NOTE: The Model Optimizer does not revert input channels from RGB to BGR by default. Manually specify the command-line parameter to perform this reversion: --reverse_input_channels.
+
+Check [Converting TensorFlow* Object Detection API Models](https://docs.openvinotoolkit.org/latest/_docs_MO_DG_prepare_model_convert_model_tf_specific_Convert_Object_Detection_API_Models.html#how_to_convert_a_model) because you downloaded an Object Detection API models from the Object Detection Model Zoo.
+
+There are the three required parameters using `mo_tf.py` script for TensorFlow* Object Detection API Models.
+
+* --input_model <path_to_frozen.pb>
+* --tensorflow_use_custom_operations_config <path_to_subgraph_replacement_configuration_file.json>
+* --tensorflow_object_detection_api_pipeline_config <path_to_pipeline.config>
+
+Finally, we will convert this model with:
+
+```
+# python /opt/intel/openvino/deployment_tools/model_optimizer/mo.py \
+  --input_model /home/workspace/ssd_mobilenet_v2_coco_2018_03_29/frozen_inference_graph.pb \
+  --tensorflow_object_detection_api_pipeline_config /home/workspace/ssd_mobilenet_v2_coco_2018_03_29/pipeline.config \
+  --reverse_input_channels \
+  --tensorflow_use_custom_operations_config /opt/intel/openvino/deployment_tools/model_optimizer/extensions/front/tf/ssd_v2_support.json
+```
+
+> `python` - `python` is specified when invoking Python
+>
+> `/opt/intel/openvino/deployment_tools/model_optimizer/mo_tf.py` - the path of the model converter script
+>
+> `--input_model /home/workspace/ssd_mobilenet_v2_coco_2018_03_29/frozen_inference_graph.pb` - option treats the input model file as a text protobuf format (in this case, frozen_inference_graph.pb within `/home/workspace/ssd_mobilenet_v2_coco_2018_03_29`)
+>
+> `--tensorflow_object_detection_api_pipeline_config /home/workspace/ssd_mobilenet_v2_coco_2018_03_29/pipeline.config` - path to the pipeline configuration file used to generate model created with help of Object Detection API. (which is also located in `/home/workspace/ssd_mobilenet_v2_coco_2018_03_29`) (maybe igonre now)
+>
+> `--reverse_input_channels` - revert input channels from RGB to BGR due to the TensorFlow models being trained on RGB images, but the Inference Engine otherwise defaulting to BGR.
+>
+> `--tensorflow_use_custom_operations_config /opt/intel/openvino/deployment_tools/model_optimizer/extensions/front/tf/ssd_v2_support.json` - use the configuration file with custom operation description. (which is also located in `/opt/intel/openvino/deployment_tools/model_optimizer/extensions/front/tf`) (maybe igonre now)
+
+[Intel - OpenVINO Toolkit - Converting TensorFlow* Object Detection API Models](https://docs.openvinotoolkit.org/latest/_docs_MO_DG_prepare_model_convert_model_tf_specific_Convert_Object_Detection_API_Models.html#how_to_convert_a_model)
+
+> `\` backslash effectively allows the a command to span multiple lines to make it easier to read a long command.
+>
+> Reference: [What does this command with a backslash at the end do?](https://unix.stackexchange.com/questions/368753/what-does-this-command-with-a-backslash-at-the-end-do)
+
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@873a2f7d04af:/home/workspace/ssd_mobilenet_v2_coco_2018_03_29# python /opt/intel/openvino/deployment_tools/model_optimizer/mo.py \
+>   --input_model /home/workspace/ssd_mobilenet_v2_coco_2018_03_29/frozen_inference_graph.pb \
+>   --tensorflow_object_detection_api_pipeline_config /home/workspace/ssd_mobilenet_v2_coco_2018_03_29/pipeline.config \
+>   --reverse_input_channels \
+>   --tensorflow_use_custom_operations_config /opt/intel/openvino/deployment_tools/model_optimizer/extensions/front/tf/ssd_v2_support.json
+Model Optimizer arguments:
+Common parameters:
+        - Path to the Input Model:      /home/workspace/ssd_mobilenet_v2_coco_2018_03_29/frozen_inference_graph.pb
+        - Path for generated IR:        /home/workspace/ssd_mobilenet_v2_coco_2018_03_29/.
+        - IR output name:       frozen_inference_graph
+        - Log level:    ERROR
+        - Batch:        Not specified, inherited from the model
+        - Input layers:         Not specified, inherited from the model
+        - Output layers:        Not specified, inherited from the model
+        - Input shapes:         Not specified, inherited from the model
+        - Mean values:  Not specified
+        - Scale values:         Not specified
+        - Scale factor:         Not specified
+        - Precision of IR:      FP32
+        - Enable fusing:        True
+        - Enable grouped convolutions fusing:   True
+        - Move mean values to preprocess section:       False
+        - Reverse input channels:       True
+TensorFlow specific parameters:
+        - Input model in text protobuf format:  False
+        - Path to model dump for TensorBoard:   None
+        - List of shared libraries with TensorFlow custom layers implementation:    None
+        - Update the configuration file with input/output node names:   None
+        - Use configuration file used to generate the model with Object Detection API:      /home/workspace/ssd_mobilenet_v2_coco_2018_03_29/pipeline.config
+        - Operations to offload:        None
+        - Patterns to offload:  None
+        - Use the config file:  /opt/intel/openvino/deployment_tools/model_optimizer/extensions/front/tf/ssd_v2_support.json
+Model Optimizer version:        2019.3.0-408-gac8584cb7
+/opt/intel/openvino_2019.3.376/deployment_tools/model_optimizer/venv/lib/python3.5/site-packages/tensorflow/python/framework/dtypes.py:516: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+/opt/intel/openvino_2019.3.376/deployment_tools/model_optimizer/venv/lib/python3.5/site-packages/tensorflow/python/framework/dtypes.py:517: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+/opt/intel/openvino_2019.3.376/deployment_tools/model_optimizer/venv/lib/python3.5/site-packages/tensorflow/python/framework/dtypes.py:518: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+/opt/intel/openvino_2019.3.376/deployment_tools/model_optimizer/venv/lib/python3.5/site-packages/tensorflow/python/framework/dtypes.py:519: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+/opt/intel/openvino_2019.3.376/deployment_tools/model_optimizer/venv/lib/python3.5/site-packages/tensorflow/python/framework/dtypes.py:520: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+/opt/intel/openvino_2019.3.376/deployment_tools/model_optimizer/venv/lib/python3.5/site-packages/tensorflow/python/framework/dtypes.py:525: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+/opt/intel/openvino_2019.3.376/deployment_tools/model_optimizer/venv/lib/python3.5/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:541: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+/opt/intel/openvino_2019.3.376/deployment_tools/model_optimizer/venv/lib/python3.5/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:542: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+/opt/intel/openvino_2019.3.376/deployment_tools/model_optimizer/venv/lib/python3.5/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:543: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+/opt/intel/openvino_2019.3.376/deployment_tools/model_optimizer/venv/lib/python3.5/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:544: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+/opt/intel/openvino_2019.3.376/deployment_tools/model_optimizer/venv/lib/python3.5/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:545: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+/opt/intel/openvino_2019.3.376/deployment_tools/model_optimizer/venv/lib/python3.5/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:550: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+The Preprocessor block has been removed. Only nodes performing mean value subtraction and scaling (if applicable) are kept.
+
+[ SUCCESS ] Generated IR model.
+[ SUCCESS ] XML file: /home/workspace/ssd_mobilenet_v2_coco_2018_03_29/./frozen_inference_graph.xml
+[ SUCCESS ] BIN file: /home/workspace/ssd_mobilenet_v2_coco_2018_03_29/./frozen_inference_graph.bin
+[ SUCCESS ] Total execution time: 89.62 seconds.
+</pre>
+</details>
+
+As you see at the end of the log, the TensorFlow Model, the SSD MobileNet V2 COCO model sucessfully converts the Intermediate Representation (IR) model for OpenVINO Toolkit.
+
+```
+# omitted...
+[ SUCCESS ] Generated IR model.
+[ SUCCESS ] XML file: /home/workspace/ssd_mobilenet_v2_coco_2018_03_29/./frozen_inference_graph.xml
+[ SUCCESS ] BIN file: /home/workspace/ssd_mobilenet_v2_coco_2018_03_29/./frozen_inference_graph.bin
+[ SUCCESS ] Total execution time: 89.62 seconds.
+```
