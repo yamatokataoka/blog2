@@ -1969,6 +1969,8 @@ python_version = 3.5
 </pre>
 </details>
 
+### SSD MobileNet V2 COCO model
+
 You'll convert a TensorFlow Model from the Object Detection Model Zoo into an Intermediate Representation using the Model Optimizer.
 
 First, you need to download the SSD MobileNet V2 COCO model which is a TensorFlow Model.
