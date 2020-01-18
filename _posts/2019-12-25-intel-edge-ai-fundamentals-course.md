@@ -2225,6 +2225,17 @@ To work more efficiently the long execution command, we can set up path environm
 >
 > Reference: [path environment variable](https://help.ubuntu.com/community/EnvironmentVariables)
 
+<details>
+<summary>log</summary>
+
+<pre>
+(venv) root@873a2f7d04af:/home/workspace/ssd_mobilenet_v2_coco_2018_03_29# export MOD_OPT=/opt/intel/openvino/deployment_tools/model_optimizer
+(venv) root@873a2f7d04af:/home/workspace/ssd_mobilenet_v2_coco_2018_03_29# export OPT_TF_CONF=opt/intel/openvino/deployment_tools/model_optimizer/extensions/front/tf
+(venv) root@873a2f7d04af:/home/workspace/ssd_mobilenet_v2_coco_2018_03_29# export TF_MOD=/home/workspace/ssd_mobilenet_v2_coco_2018_03_29
+(venv) root@873a2f7d04af:/home/workspace/ssd_mobilenet_v2_coco_2018_03_29#
+</pre>
+</details>
+
 Now you can run more cleaner commands for converting.
 
 ```
