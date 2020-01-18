@@ -7,7 +7,7 @@ This is a complete guide for blog creating with Jekyll and Docker. Jekyll is a s
 
 With Docker, it could compile or even serve a Jekyll site locally without going through the entire fuss of getting Jekyll up and running on a local machine.
 
-After setting up a basic Jekyll Now blog, this guide moves onto more advanced topic dealing with HTML, CSS and Jekyll. You will be more confortable with Jekyll and design your own blog.
+After setting up a basic Jekyll Now blog, this guide moves onto more advanced topic dealing with HTML, CSS and Jekyll configuration. You will be more confortable with Jekyll and designing your own blog.
 
 # Prerequisites
 - Mac
@@ -375,12 +375,14 @@ Enter your site name, description, avatar and many other options by editing the 
 
 comments below all set up will help you configurating.
 
-My final configuration looks like
+My final configuration looks like this:
+
+{::options parse_block_html="true" /}
 
 <details>
-<summary>_config.yml</summary>
+<summary markdown="span">_config.yml</summary>
 
-<pre>
+```
 #
 # This file contains configuration flags to customize your site
 #
@@ -470,8 +472,15 @@ exclude:
   - vendor
   - .jekyll-cache
   - .gitignore
-</pre>
+```
+
+> `avatar: /images/profile.png` - here you can specify the location of image like `/images/profile.png`
+>
+> `baseurl: ""` -  `baseurl` will be blank for User repository.
+
 </details>
+
+{::options parse_block_html="false" /}
 
 ## Fix highlight scss
 Replace .highlight to pre on jekyll-now/_sass/_highlights.scss for fixing bug on Jekyll Now. This bug is reported on the original repository as a [issue](https://github.com/barryclark/jekyll-now/issues/1526).
@@ -486,7 +495,7 @@ Replace .highlight to pre on jekyll-now/_sass/_highlights.scss for fixing bug on
 ```
 
 ## Update highlight scss
-(Ongoing) Here is my `_sass/_highlights.scss`. You may refer this.
+To change github-like code block, Update `_sass/_highlights.scss` provides styling of highlight block.
 
 <details>
 <summary>_sass/_highlights.scss</summary>
@@ -561,5 +570,41 @@ also delete font size specification on blockquote block inside .post.
    }
 # ...omitted
 ```
+
+the final layout looks like this:
+
+{% include helpers/image.html name="Screen Shot 2019-12-29 at 18.15.38.png" %}
+
+## Add details tag style
+
+There is no style on HTML5 `details` tag.
+
+Add style under `_sass/` named like `_details.scss`
+
+```
+details {
+  padding: 1em;
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+}
+```
+
+Add add import statement on the scss file for `_details.scss`.
+
+```
+---
+---
+
+//
+// IMPORTS
+//
+
+@import "reset";
+@import "variables";
+@import "details";
+# omitted ...
+```
+
+Reference: [The Details and Summary HTML Elements](https://alligator.io/html/details-summary-elements/)
 
 # Set up Docker Compose (future)
