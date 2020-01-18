@@ -2209,3 +2209,28 @@ As you see at the end of the log, the TensorFlow Model, the SSD MobileNet V2 COC
 [ SUCCESS ] BIN file: /home/workspace/ssd_mobilenet_v2_coco_2018_03_29/./frozen_inference_graph.bin
 [ SUCCESS ] Total execution time: 89.62 seconds.
 ```
+
+### Solution: Convert a TF Model
+
+To work more efficiently the long command, we set up a path environment variable:
+
+```
+# export MOD_OPT=/opt/intel/openvino/deployment_tools/model_optimizer
+# export OPT_TF_CONF=opt/intel/openvino/deployment_tools/model_optimizer/extensions/front/tf
+# export TF_MOD=/home/workspace/ssd_mobilenet_v2_coco_2018_03_29
+```
+
+> `export MOD_OPT=/opt/intel/openvino/deployment_tools/model_optimizer` - Creates the "MOD_OPT" environment variable and assign the value "/opt/intel/openvino/deployment_tools/model_optimizer" to it.  
+> below two export command is almost same. You can choose variable name and value you want. (In this case, I chose `OPT_TF_CONF` and `TF_MOD` as the variable name)
+>
+> Reference: [path environment variable](https://help.ubuntu.com/community/EnvironmentVariables)
+
+Now you can run more cleaner commands for converting.
+
+```
+# python $MOD_OPT/mo.py \
+  --input_model $TF_MOD/frozen_inference_graph.pb \
+  --tensorflow_object_detection_api_pipeline_config $TF_MOD/pipeline.config \
+  --reverse_input_channels \
+  --tensorflow_use_custom_operations_config $OPT_TF_CONF/ssd_v2_support.json
+```
