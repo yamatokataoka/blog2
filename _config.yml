@@ -87,3 +87,5 @@ exclude:
   - vendor
   - .jekyll-cache
   - .gitignore
+
+theme: jekyll-theme-cayman
