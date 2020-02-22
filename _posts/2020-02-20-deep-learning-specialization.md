@@ -17,7 +17,7 @@ In this course, you will:
 - Know how to implement efficient (vectorized) neural networks
 - Understand the key parameters in a neural network's architecture
 
-## Week 2
+# Week 2
 
 Key Concepts on Programming Assignments
 - Work with iPython Notebooks
@@ -27,7 +27,7 @@ Key Concepts on Programming Assignments
 - Be able to implement vectorization across multiple training examples
 - Implement computationally efficient, highly vectorized, versions of models.
 
-### Python Basics with numpy
+## Python Basics with numpy
 
 In this assignment you will:
 
@@ -37,7 +37,7 @@ In this assignment you will:
 - Recognize the importance of vectorization.
 - Understand how python broadcasting works.
 
-##### sigmoid function, np.exp()
+### sigmoid function, np.exp()
 
 You will implement the sigmoid function using both `math.exp()` and `np.exp()` on your iPython Notebook.
 
@@ -61,7 +61,7 @@ Using np stands for numpy,
 
 > `1 / (1 + np.exp(-x))` - Same above, but `np.exp(-x)` will apply the exponential function to every element of x.
 
-##### Sigmoid gradient
+### Sigmoid gradient
 
 You will implement the function `sigmoid_grad()` to compute the gradient of the sigmoid function.
 
@@ -81,7 +81,7 @@ ds = s * (1 - s)
 
 > `ds = s * (1 - s)` - The derivative formula assgines to `ds` variable, stands for `ds/dx`.
 
-##### Reshaping arrays
+### Reshaping arrays
 
 Reshape an image 3D array to a vector of shape (length*height*depth, 1).
 
@@ -92,7 +92,7 @@ v = image.reshape((image.shape[0]*image.shape[1]*image.shape[2], 1))
 > `v = image.reshape((image.shape[0]*image.shape[1]*image.shape[2], 1))` - The `reshape` function takes tuple as a newshape (In this case, `(image.shape[0]*image.shape[1]*image.shape[2], 1)`).  
 Reference: [numpy.reshape](https://docs.scipy.org/doc/numpy/reference/generated/numpy.reshape.html#numpy.reshape)
 
-##### Normalizing rows
+### Normalizing rows
 
 To get a better performance, numpy matrix will be normalized with a value called norm.
 Reference: [2.5 Norms](https://hadrienj.github.io/posts/Deep-Learning-Book-Series-2.5-Norms/)
@@ -120,7 +120,7 @@ if x is
  [1, 6, 4]]
 ```
 
-##### Broadcasting and the softmax function
+### Broadcasting and the softmax function
 
 For the softmax for each row of the input x, Calculate the exponential of all each elements in the input array.
 
