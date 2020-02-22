@@ -100,5 +100,58 @@ Reference: [2.5 Norms](https://hadrienj.github.io/posts/Deep-Learning-Book-Serie
 Compute the norm 2 of x.
 
 ```
+x_norm = np.linalg.norm(x, ord = 2, axis = 1, keepdims = True)
+```
+
+> `x_norm = np.linalg.norm(x, ord = 2, axis = 1, keepdims = True)` - Compute the Frobenius norm (`ord = 2`) each row of the matrix x (`axis = 1`) to normalize the rows of a matrix. The `keepdims` keep the result as dimensions with size one to broadcast correctly.  
+> Reference: [numpy.linalg.norm](https://docs.scipy.org/doc/numpy/reference/generated/numpy.linalg.norm.html)
+
+The x_norm will be
 
 ```
+[[ 5.        ]
+ [ 7.28010989]]
+```
+
+if x is
+
+```
+[[0, 3, 4],
+ [1, 6, 4]]
+```
+
+##### Broadcasting and the softmax function
+
+For the softmax for each row of the input x, Calculate the exponential of all each elements in the input array.
+
+```
+x_exp = np.exp(x)
+```
+
+Create a vector x_sum that sums each row of x_exp.
+
+```
+x_sum = np.sum(x_exp, axis = 1, keepdims = True)
+```
+
+> `x_sum = np.sum(x_exp, axis = 1, keepdims = True)` - Sum up the elements with arugument options that the same rule of `np.linalg.norm` function goes. x_sum is made up by `x_exp`.  
+> Reference: [numpy.sum](https://docs.scipy.org/doc/numpy/reference/generated/numpy.sum.html)
+
+##### Implement the L1 and L2 loss functions
+
+The L1 loss function represents like in python:
+
+```
+loss = np.sum(abs(y - yhat))
+```
+
+> `loss = np.sum(abs(y - yhat))` -  The basic math python operations like `+、-、*、/` and `abs` are possible to use on a vector for each elements.  
+Reference: [abs() in Python](https://www.geeksforgeeks.org/abs-in-python/)
+
+Also the L2 loss function will be:
+
+```
+loss = np.dot(y-yhat, y-yhat)
+```
+
+> `loss = np.dot(y-yhat, y-yhat)` - x will be replaced by y-yhat.
