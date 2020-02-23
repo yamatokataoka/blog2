@@ -137,7 +137,7 @@ x_sum = np.sum(x_exp, axis = 1, keepdims = True)
 > `x_sum = np.sum(x_exp, axis = 1, keepdims = True)` - Sum up the elements with arugument options that the same rule of `np.linalg.norm` function goes. x_sum is made up by `x_exp`.  
 > Reference: [numpy.sum](https://docs.scipy.org/doc/numpy/reference/generated/numpy.sum.html)
 
-##### Implement the L1 and L2 loss functions
+### Implement the L1 and L2 loss functions
 
 The L1 loss function represents like in python:
 
@@ -155,3 +155,99 @@ loss = np.dot(y-yhat, y-yhat)
 ```
 
 > `loss = np.dot(y-yhat, y-yhat)` - x will be replaced by y-yhat.
+
+## Logistic Regression with a Neural Network mindset
+
+You will implement:
+- The general architecture of a learning algorithm
+- The cost function and its gradient
+- The optimization algorithm (gradient descent)
+
+### Packages
+
+Import a helper package to load dataset provided by Coursera deeplearning.ai.
+
+```
+from lr_utils import load_dataset
+```
+
+and run a matplotlib magic function to include matplotlib graphs in your notebook.  
+Reference: [Purpose of “%matplotlib inline”](https://stackoverflow.com/questions/43027980/purpose-of-matplotlib-inline)
+
+```
+%matplotlib inline
+```
+
+### Overview of the Problem set
+
+You can check the original picture using `matplotlib.pyplot` library.
+
+```
+plt.imshow(train_set_x_orig[index])
+```
+
+> `plt.imshow(train_set_x_orig[index])` - Display an image as a (M, N, 3): an image with RGB values.  
+> Reference: [matplotlib.pyplot.imshow](https://matplotlib.org/3.1.3/api/_as_gen/matplotlib.pyplot.imshow.html)
+
+For the input features, we can select all rows and the specific column index  by specifying `:` for in the rows index, and `index` variable in the columns index.  
+Reference: [Two-Dimensional Slicing](https://machinelearningmastery.com/index-slice-reshape-numpy-arrays-machine-learning-python/)
+
+```
+train_set_y[:, index]
+```
+
+FYI, you can check `train_set_y` ndarray shape.
+
+```
+print(str(train_set_y.shape))
+```
+
+```
+(1, 209)
+```
+
+Also check the `classes` array.
+
+```
+print(classes)
+```
+
+```
+[b'non-cat' b'cat']
+```
+
+> `b'non-cat'` - Python 3 uses unicode, and marks bytestrings with this b.  
+> Reference: ['b' character added when using numpy loadtxt](https://stackoverflow.com/questions/33655641/b-character-added-when-using-numpy-loadtxt)
+
+You can decode utf-8 by
+
+```
+decode("utf-8")
+```
+
+And using `np.squeeze` function, the ndarray becomes zero dimension ndarray.  
+Reference: [Zero-dimensional numpy.ndarray : only element is a 2D array : how to access it?](https://stackoverflow.com/questions/51149865/zero-dimensional-numpy-ndarray-only-element-is-a-2d-array-how-to-access-it)
+
+```
+np.squeeze(train_set_y[:, index])
+```
+
+> `np.squeeze` - Remove single-dimensional entries from the shape of an array.  
+> Reference: [numpy.squeeze](https://docs.scipy.org/doc/numpy/reference/generated/numpy.squeeze.html)
+
+The shape print `()` tuple.
+
+```
+print(np.squeeze(train_set_y[:, index]).shape)
+```
+
+To flatten the image training set,
+
+```
+train_set_x_orig.reshape(m_train, -1).T
+```
+
+> `train_set_x_orig.reshape(m_train, -1)` - Reshape the original ndarray, `train_set_x_orig` to `(m_train, -1)` column as `m_train` but rows as unknown. The `-1` is used when it is unknown. The `T` transpose the shape from `(m_train, 12288)` to `(12288, m_train)`.  
+> Reference: [What does -1 mean in numpy reshape?](https://stackoverflow.com/questions/18691084/what-does-1-mean-in-numpy-reshape)
+
+The sanity check shows you how your pixel array should end up by sampling a few elements. If you are wrong ways to do the reshape and flatten, which would end up with the pixels in a different order.
