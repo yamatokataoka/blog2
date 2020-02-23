@@ -251,3 +251,79 @@ train_set_x_orig.reshape(m_train, -1).T
 > Reference: [What does -1 mean in numpy reshape?](https://stackoverflow.com/questions/18691084/what-does-1-mean-in-numpy-reshape)
 
 The sanity check shows you how your pixel array should end up by sampling a few elements. If you are wrong ways to do the reshape and flatten, which would end up with the pixels in a different order.
+
+### Building the parts of our algorithm
+
+For parameter initialization of w, we can use `np.zeros` function with specifying the shape, `(dim, 1)`.  
+Reference: [numpy.zeros](https://docs.scipy.org/doc/numpy/reference/generated/numpy.zeros.html)
+
+```
+w = np.zeros((dim, 1))
+```
+
+For forward propagation (computing current loss), first implement using the activation function, sigmoid function here.  
+Reference: [What is a Neural Network Activation Function?](https://missinglink.ai/guides/neural-network-concepts/7-types-neural-network-activation-functions-right/)
+
+```
+sigmoid(np.dot(w.T, X) + b)
+```
+
+> `np.dot(w.T, X)` - Compute dot product of two arrays. w is stack horizontally, so transpose it using `.T`.  
+> Reference: [numpy.dot](https://docs.scipy.org/doc/numpy/reference/generated/numpy.dot.html)
+
+In that case of w = `np.array([[1.],[2.]])`, b = `2.`, and X = `np.array([[1.,2.,-1.],[3.,4.,-3.2]])`, the result would be
+
+```
+[[ 0.99987661  0.99999386  0.00449627]]
+```
+
+Next, compute cost, the difference between Y and computed A
+
+```
+cost = -1 / m * (np.sum(Y*np.log(A) + (1-Y)*np.log(1-A)))
+```
+
+Then computes current gradient as a backward propagation using pre-calculated two formulas.
+
+For w
+
+```
+1 / m * np.dot(X, (A-Y).T)
+```
+
+For b
+
+```
+1 / m * np.sum(A - Y)
+```
+
+Those slopes will change w and b to reduce loss, cose result. So optimize it using those.
+
+For example, in case of w using `learning_rate` and `dw`
+
+```
+w = w - learning_rate*dw
+```
+
+Uisng those learned w and b, make a prediction. Convert the entries of a into 0 (if activation <= 0.5) or 1 (if activation > 0.5), stores the predictions in a vector Y_prediction.
+
+```
+if A[:, i] >= 0.5:
+    Y_prediction[:, i] = 1.
+else:
+    Y_prediction[:, i] = 0.
+```
+
+### Merge all functions into a model
+
+Here, you see how to compute the test accuracy.
+
+```
+100 - np.mean(np.abs(Y_prediction_test - Y_test)) * 100)
+```
+
+> `Y_prediction_test - Y_test` - The difference between predicted result and real value.
+>
+> `np.mean(np.abs(Y_prediction_test - Y_test))` - So, this computes the overall meaning of loss.
+>
+> `100 - np.mean(np.abs(Y_prediction_test - Y_test)) * 100)` - 100 - loss = accuracy.
