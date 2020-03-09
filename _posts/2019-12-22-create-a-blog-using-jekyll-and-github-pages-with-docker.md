@@ -81,10 +81,12 @@ Run below command in wherever you want (In this guide, `~/workspace`)
 
 > `git clone` - git command to copy the repository on GitHub on your local computer
 
-<details>
-<summary>log</summary>
+{::options parse_block_html="true" /}
 
-<pre>
+<details>
+<summary markdown="span">log</summary>
+
+```
 yamatokataoka@Yamatos-MacBook-Pro workspace % git clone git@github.com:barryclark/jekyll-now.git
 Cloning into 'jekyll-now'...
 remote: Enumerating objects: 1300, done.
@@ -107,8 +109,11 @@ drwxr-xr-x  6 yamatokataoka  staff   192 Dec 24 20:34 _sass
 drwxr-xr-x  8 yamatokataoka  staff   256 Dec 24 20:34 images
 -rw-r--r--  1 yamatokataoka  staff   368 Dec 24 20:34 index.html
 -rw-r--r--  1 yamatokataoka  staff  3863 Dec 24 20:34 style.scss
-</pre>
+```
+
 </details>
+
+{::options parse_block_html="false" /}
 
 now jekyll-now setting up has finished on your local.
 
@@ -179,7 +184,7 @@ A Jekyll blog is being generated and served from the Docker container and you ca
 docker run --rm -it -p 4000:4000 --volume="$PWD:/srv/jekyll" --volume="$PWD/vendor/bundle:/usr/local/bundle" jekyll/jekyll /bin/bash jekyll serve --force_polling
 ```
 
-> ``-p 4000:4000` - option to expose a container’s internal port 4000 and the exposed port is accessible on the host and the port 4000  
+> `-p 4000:4000` - option to expose a container’s internal port 4000 and the exposed port is accessible on the host and the port 4000  
 >  
 > `jekyll serve` - runs the serve command for Jekyll  
 >  
@@ -272,10 +277,12 @@ Create a new commit with a message describing what work was done in the commit (
 
 After executing above, your repo will now have all files which you created with jekyll new . command on Docker, added to the history and will track future updates to the files.
 
-<details>
-<summary>log</summary>
+{::options parse_block_html="true" /}
 
-<pre>
+<details>
+<summary markdown="span">log</summary>
+
+```
 yamatokataoka@Yamatos-MacBook-Pro jekyll-now % git commit -m "first commit"
 [master (root-commit) 0bf4096] first commit
  32 files changed, 929 insertions(+)
@@ -311,8 +318,11 @@ yamatokataoka@Yamatos-MacBook-Pro jekyll-now % git commit -m "first commit"
  create mode 100644 images/step1.gif
  create mode 100644 index.html
  create mode 100644 style.scss
-</pre>
+```
+
 </details>
+
+{::options parse_block_html="false" /}
 
 Add your GitHub repository as a remote, replacing `USER` with the account that owns the repository and `REPOSITORY` with the name of the repository, it would be `<user>.github.io`.
 
@@ -370,7 +380,7 @@ Your Jekyll blog will often be viewable immediately at https://USER.github.io.
 # Customize and view your site (Ongoing)
 This is example configurating for Jeyll Now.
 
-## Edit _config.yml file
+## Edit \_config.yml file
 Enter your site name, description, avatar and many other options by editing the `_config.yml` file. You can easily turn on Google Analytics tracking, Disqus commenting and social icons here too.
 
 comments below all set up will help you configurating.
@@ -380,7 +390,7 @@ My final configuration looks like this:
 {::options parse_block_html="true" /}
 
 <details>
-<summary markdown="span">_config.yml</summary>
+<summary markdown="span">\_config.yml</summary>
 
 ```
 #
@@ -483,7 +493,7 @@ exclude:
 {::options parse_block_html="false" /}
 
 ## Fix highlight scss
-Replace .highlight to pre on jekyll-now/_sass/_highlights.scss for fixing bug on Jekyll Now. This bug is reported on the original repository as a [issue](https://github.com/barryclark/jekyll-now/issues/1526).
+Replace .highlight to pre on `jekyll-now/_sass/_highlights.scss` for fixing bug on Jekyll Now. This bug is reported on the original repository as a [issue](https://github.com/barryclark/jekyll-now/issues/1526).
 
 ```
 # ... omitted
@@ -497,10 +507,12 @@ Replace .highlight to pre on jekyll-now/_sass/_highlights.scss for fixing bug on
 ## Update highlight scss
 To change github-like code block, Update `_sass/_highlights.scss` provides styling of highlight block.
 
-<details>
-<summary>_sass/_highlights.scss</summary>
+{::options parse_block_html="true" /}
 
-<pre>
+<details>
+<summary markdown="span">\_sass/\_highlights.scss</summary>
+
+```
 pre {
   background-color: #efefef;
   padding: 16px;
@@ -515,8 +527,11 @@ code {
   border-radius: 3px;
 }
 # ...omitted (the same with original)
-</pre>
+```
+
 </details>
+
+{::options parse_block_html="false" /}
 
 
 ## Update home layout
