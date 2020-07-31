@@ -8,6 +8,8 @@ pre {
 }
 
 code {
+  @include word-wrap;
+
   background-color: #efefef;
   font-family:'Bitstream Vera Sans Mono','Courier', monospace;
   border-radius: 3px;
