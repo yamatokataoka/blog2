@@ -621,5 +621,3 @@ Add add import statement on the scss file for `_details.scss`.
 ```
 
 Reference: [The Details and Summary HTML Elements](https://alligator.io/html/details-summary-elements/)
-
-# Set up Docker Compose (future)
