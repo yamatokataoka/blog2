@@ -4,12 +4,13 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
+**BS** Electrical Engineering, Fukuoka Institute of Technology
 
-### More Information
+I am currently an engineer at Planetway Japan. My interests are:
 
-A place to include any other types of information that you'd like to include about yourself.
+* To develop secure systems which empower individuals to take better control of their data.
+* To create safe AI systems that learn quickly, make good decisions robustly, and align with human values.
 
-### Contact me
+## Employment
 
-[email@domain.com](mailto:email@domain.com)
+**Planetway Japan** - Planetway Corporation is a startup developing "PlanetCross", a secure data exchange platform which is based on the Estonian e-government technology “X-Road”, and “PlanetID,” a digital universal ID enabling identity verification, authentication, and electronic signature. I conduct various testing ensuring the robustness of our products. I automate Regression Test (over 10x faster) and application provisioning using Ansible and Terraform, DevOps for quality assurance managing 50+ servers on AWS and Azure, and Enable performance monitoring with Zabbix.
