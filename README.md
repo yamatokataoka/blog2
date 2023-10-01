@@ -1,6 +1,6 @@
 # Personal Blog
 
-You can view the blog at [https://yamatokataoka.github.io/](https://yamatokataoka.github.io/)
+~~You can view the blog at [https://yamatokataoka.github.io/](https://yamatokataoka.github.io/)~~
 
 ## How it was made
 
